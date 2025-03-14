@@ -40,7 +40,12 @@ public interface ApplicationContextFactory {
 	 * A default {@link ApplicationContextFactory} implementation that will create an
 	 * appropriate context for the {@link WebApplicationType}.
 	 */
-	ApplicationContextFactory DEFAULT = new DefaultApplicationContextFactory();
+	//ApplicationContextFactory DEFAULT = new DefaultApplicationContextFactory();
+
+	/**
+	 * a default {@link ApplicationContextFactory} implementation that will create an
+	 * appropriate context for the {@link WebApplicationType}*/
+	ApplicationContextFactory DEFAULT = new LazyDefaultApplicationContextFactory();
 
 	/**
 	 * Return the {@link Environment} type expected to be set on the

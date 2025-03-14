@@ -172,6 +172,7 @@ tasks.named("checkFormatMain") {
 	source(fileTree("src/main/javaTemplates"))
 }
 
+
 plugins.withType(EclipsePlugin) {
 	eclipse {
 		synchronizationTasks syncJavaTemplates
@@ -192,3 +193,4 @@ sourceSets {
 test {
 	jvmArgs += "--add-opens=java.base/java.net=ALL-UNNAMED"
 }
+

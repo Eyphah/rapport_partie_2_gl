@@ -34,6 +34,7 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  */
 class DefaultApplicationContextFactory implements ApplicationContextFactory {
 
+
 	@Override
 	public Class<? extends ConfigurableEnvironment> getEnvironmentType(WebApplicationType webApplicationType) {
 		return getFromSpringFactories(webApplicationType, ApplicationContextFactory::getEnvironmentType, null);
