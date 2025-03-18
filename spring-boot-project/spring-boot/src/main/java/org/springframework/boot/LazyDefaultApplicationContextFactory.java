@@ -16,22 +16,19 @@
 
 package org.springframework.boot;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 public class LazyDefaultApplicationContextFactory implements ApplicationContextFactory {
 
-	private static volatile ApplicationContextFactory delegate;
+
+	private static final Supplier<ApplicationContextFactory> delegateSupplier =
+			LazySupplier.of(DefaultApplicationContextFactory::new);
 
 	private static ApplicationContextFactory getDelegate() {
-		if (delegate == null) {
-			synchronized (LazyDefaultApplicationContextFactory.class) {
-				if (delegate == null) {
-					delegate = new DefaultApplicationContextFactory();
-				}
-			}
-		}
-		return delegate;
+		return delegateSupplier.get();
 	}
 
 	@Override
@@ -48,5 +45,28 @@ public class LazyDefaultApplicationContextFactory implements ApplicationContextF
 	public ConfigurableEnvironment createEnvironment(WebApplicationType webApplicationType) {
 		return getDelegate().createEnvironment(webApplicationType);
 	}
+	private static class LazySupplier implements Supplier<ApplicationContextFactory> {
+		private volatile ApplicationContextFactory instance;
+		private final Supplier<ApplicationContextFactory> supplier;
 
+		private LazySupplier(Supplier<ApplicationContextFactory> supplier) {
+			this.supplier = supplier;
+		}
+
+		public static LazySupplier of(Supplier<ApplicationContextFactory> supplier) {
+			return new LazySupplier(supplier);
+		}
+
+		@Override
+		public ApplicationContextFactory get() {
+			if (this.instance == null) {
+				synchronized (this) {
+					if (this.instance == null) {
+						this.instance = this.supplier.get();
+					}
+				}
+			}
+			return this.instance;
+		}
+	}
 }
