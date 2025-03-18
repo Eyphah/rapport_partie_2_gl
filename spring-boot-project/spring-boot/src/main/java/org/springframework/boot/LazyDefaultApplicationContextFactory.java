@@ -16,11 +16,11 @@
 
 package org.springframework.boot;
 
-
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 public class LazyDefaultApplicationContextFactory implements ApplicationContextFactory {
+
 	private static volatile ApplicationContextFactory delegate;
 
 	private static ApplicationContextFactory getDelegate() {
@@ -48,4 +48,5 @@ public class LazyDefaultApplicationContextFactory implements ApplicationContextF
 	public ConfigurableEnvironment createEnvironment(WebApplicationType webApplicationType) {
 		return getDelegate().createEnvironment(webApplicationType);
 	}
+
 }
