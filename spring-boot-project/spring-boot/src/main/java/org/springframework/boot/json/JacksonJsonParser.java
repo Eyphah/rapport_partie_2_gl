@@ -51,11 +51,19 @@ public class JacksonJsonParser extends AbstractJsonParser {
 	public JacksonJsonParser() {
 	}
 
+	/**
+	 * Method that parses a JSON String into a Map<String,Object>.
+	 * @param json The string to parse.
+	 * @return The parsed Map<String, Object>.*/
 	@Override
 	public Map<String, Object> parseMap(String json) {
 		return tryParse(() -> getObjectMapper().readValue(json, MAP_TYPE), Exception.class);
 	}
 
+	/**
+	 * Method that parses a JSON String into a List<Object>.
+	 * @param json The string to parse.
+	 * @return The parsed List<Object>.*/
 	@Override
 	public List<Object> parseList(String json) {
 		return tryParse(() -> getObjectMapper().readValue(json, LIST_TYPE), Exception.class);

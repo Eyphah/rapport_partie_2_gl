@@ -38,6 +38,29 @@ import org.springframework.util.ClassUtils;
  */
 class JacksonRuntimeHints implements RuntimeHintsRegistrar {
 
+	/**
+	 * Registers runtime hints for Jackson serializer classes to support native image compilation (e.g., GraalVM).
+	 * This implementation conditionally registers serializer classes if the core Jackson databind infrastructure
+	 * is present in the classpath.
+	 *
+	 * The method performs two main operations:
+	 * 1. Checks for the presence of Jackson's {@code BasicSerializerFactory} class to verify Jackson availability</li>
+	 * 2. Registers specific serializer classes for reflection if Jackson is present</li>
+	 *
+	 * The following serializers are registered with {@code INVOKE_PUBLIC_CONSTRUCTORS} access:
+	 * 1.{@code AtomicBooleanSerializer}
+	 * 2.{@code AtomicIntegerSerializer}
+	 * 3.{@code AtomicLongSerializer}
+	 * 4.{@code FileSerializer}
+	 * 5.{@code ClassSerializer}
+	 * 6.{@code TokenBufferSerializer}
+	 *
+	 * @param hints the {@link RuntimeHints} instance to register with
+	 * @param classLoader the classloader to use for checking class presence
+	 *
+	 * @see RuntimeHints
+	 * @see ReflectionHints
+	 */
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 		if (!ClassUtils.isPresent("com.fasterxml.jackson.databind.ser.BasicSerializerFactory", classLoader)) {
@@ -46,6 +69,12 @@ class JacksonRuntimeHints implements RuntimeHintsRegistrar {
 		registerSerializers(hints.reflection());
 	}
 
+	/**
+	 * Helper method that registers specific Jackson serializer classes for reflection support.
+	 * The registered serializers will have their public constructors made available at runtime.
+	 *
+	 * @param hints the {@link ReflectionHints} instance to register serializer types with
+	 */
 	private void registerSerializers(ReflectionHints hints) {
 		hints.registerTypes(TypeReference.listOf(AtomicBooleanSerializer.class, AtomicIntegerSerializer.class,
 				AtomicLongSerializer.class, FileSerializer.class, ClassSerializer.class, TokenBufferSerializer.class),

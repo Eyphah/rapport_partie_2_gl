@@ -218,6 +218,23 @@ class JsonValueWriter {
 		pairs.accept(this::writePair);
 	}
 
+	/**
+	 * Writes a name-value pair to the JSON output, handling path tracking, filtering,
+	 * and proper JSON formatting. The method manages:
+	 * <ul>
+	 *   <li>Path hierarchy tracking (parent/child relationships)</li>
+	 *   <li>Path-based filtering</li>
+	 *   <li>Name processing/transformation</li>
+	 *   <li>JSON proper formatting (quotes, escaping)</li>
+	 *   <li>Series state management</li>
+	 * </ul>
+	 *
+	 * @param <N> the name type (will be converted to String)
+	 * @param <V> the value type
+	 * @param name the JSON property name
+	 * @param value the JSON property value
+	 * @throws IllegalStateException if the name was already written or no series is active
+	 */
 	private <N, V> void writePair(N name, V value) {
 		this.path = this.path.child(name.toString());
 		if (!isFilteredPath()) {
@@ -234,6 +251,17 @@ class JsonValueWriter {
 		this.path = this.path.parent();
 	}
 
+	/**
+	 * Writes a string value with proper JSON string escaping rules:
+	 * <ul>
+	 *   <li>Wraps value in double quotes</li>
+	 *   <li>Escapes special characters (", \, /, control chars)</li>
+	 *   <li>Converts ISO control characters to \\uXXXX format</li>
+	 * </ul>
+	 *
+	 * @param value the object to write as JSON string (calls toString())
+	 * @throws UncheckedIOException if writing fails
+	 */
 	private void writeString(Object value) {
 		try {
 			this.out.append('"');
@@ -267,6 +295,12 @@ class JsonValueWriter {
 		}
 	}
 
+	/**
+	 * Appends a raw string value to the output without any processing.
+	 *
+	 * @param value the string to append
+	 * @throws UncheckedIOException if writing fails
+	 */
 	private void append(String value) {
 		try {
 			this.out.append(value);
@@ -277,6 +311,12 @@ class JsonValueWriter {
 
 	}
 
+	/**
+	 * Appends a single character to the output without any processing.
+	 *
+	 * @param ch the character to append
+	 * @throws UncheckedIOException if writing fails
+	 */
 	private void append(char ch) {
 		try {
 			this.out.append(ch);
@@ -286,6 +326,11 @@ class JsonValueWriter {
 		}
 	}
 
+	/**
+	 * Checks if the current path should be filtered out based on registered path filters.
+	 *
+	 * @return true if any filter matches the current path, false otherwise
+	 */
 	private boolean isFilteredPath() {
 		for (JsonWriterFiltersAndProcessors filtersAndProcessors : this.filtersAndProcessors) {
 			for (Predicate<MemberPath> pathFilter : filtersAndProcessors.pathFilters()) {
@@ -297,6 +342,15 @@ class JsonValueWriter {
 		return false;
 	}
 
+	/**
+	 * Processes a property name through all registered name processors.
+	 * Applies processors in registration order, with each processor's output
+	 * becoming the next processor's input.
+	 *
+	 * @param name the original property name
+	 * @return the processed name
+	 * @throws IllegalStateException if any processor returns an empty result
+	 */
 	private String processName(String name) {
 		for (JsonWriterFiltersAndProcessors filtersAndProcessors : this.filtersAndProcessors) {
 			for (NameProcessor nameProcessor : filtersAndProcessors.nameProcessors()) {
@@ -306,12 +360,29 @@ class JsonValueWriter {
 		return name;
 	}
 
+	/**
+	 * Applies a single name processor to transform a property name.
+	 *
+	 * @param name the original name
+	 * @param nameProcessor the processor to apply
+	 * @return the processed name
+	 * @throws IllegalStateException if the processor returns an empty result
+	 */
 	private String processName(String name, NameProcessor nameProcessor) {
 		name = nameProcessor.processName(this.path, name);
 		Assert.state(StringUtils.hasLength(name), "NameProcessor " + nameProcessor + " returned an empty result");
 		return name;
 	}
 
+	/**
+	 * Processes a value through all registered value processors.
+	 * Applies processors in registration order, with each processor's output
+	 * becoming the next processor's input.
+	 *
+	 * @param <V> the value type
+	 * @param value the original value
+	 * @return the processed value
+	 */
 	private <V> V processValue(V value) {
 		for (JsonWriterFiltersAndProcessors filtersAndProcessors : this.filtersAndProcessors) {
 			for (ValueProcessor<?> valueProcessor : filtersAndProcessors.valueProcessors()) {
@@ -320,6 +391,16 @@ class JsonValueWriter {
 		}
 		return value;
 	}
+
+	/**
+	 * Applies a single value processor to transform a property value.
+	 * Uses type-safe callback invocation through LambdaSafe.
+	 *
+	 * @param <V> the value type
+	 * @param value the original value
+	 * @param valueProcessor the processor to apply
+	 * @return the processed value
+	 */
 
 	@SuppressWarnings({ "unchecked", "unchecked" })
 	private <V> V processValue(V value, ValueProcessor<?> valueProcessor) {
