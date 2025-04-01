@@ -94,19 +94,6 @@ public class DefaultPropertiesPropertySource extends MapPropertySource {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void mergeIfPossible(Map<String, Object> source, MutablePropertySources sources,
-			Map<String, Object> resultingSource) {
-		PropertySource<?> existingSource = sources.get(NAME);
-		if (existingSource != null) {
-			Object underlyingSource = existingSource.getSource();
-			if (underlyingSource instanceof Map) {
-				resultingSource.putAll((Map<String, Object>) underlyingSource);
-			}
-			resultingSource.putAll(source);
-		}
-	}
-
 	/**
 	 * Move the 'defaultProperties' property source so that it's the last source in the
 	 * given {@link ConfigurableEnvironment}.
@@ -125,6 +112,19 @@ public class DefaultPropertiesPropertySource extends MapPropertySource {
 		PropertySource<?> propertySource = propertySources.remove(NAME);
 		if (propertySource != null) {
 			propertySources.addLast(propertySource);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void mergeIfPossible(Map<String, Object> source, MutablePropertySources sources,
+			Map<String, Object> resultingSource) {
+		PropertySource<?> existingSource = sources.get(NAME);
+		if (existingSource != null) {
+			Object underlyingSource = existingSource.getSource();
+			if (underlyingSource instanceof Map) {
+				resultingSource.putAll((Map<String, Object>) underlyingSource);
+			}
+			resultingSource.putAll(source);
 		}
 	}
 

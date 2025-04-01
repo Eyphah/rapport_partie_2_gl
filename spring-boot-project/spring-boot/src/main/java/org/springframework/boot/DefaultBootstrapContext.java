@@ -46,21 +46,18 @@ public class DefaultBootstrapContext implements ConfigurableBootstrapContext {
 		register(type, instanceSupplier, true);
 	}
 
+	/**
+	 * Method to be called when {@link BootstrapContext} is closed and the
+	 * {@link ApplicationContext} is prepared.
+	 * @param applicationContext the prepared context
+	 */
+	public void close(ConfigurableApplicationContext applicationContext) {
+		this.events.multicastEvent(new BootstrapContextClosedEvent(this, applicationContext));
+	}
+
 	@Override
 	public <T> void registerIfAbsent(Class<T> type, InstanceSupplier<T> instanceSupplier) {
 		register(type, instanceSupplier, false);
-	}
-
-	private <T> void register(Class<T> type, InstanceSupplier<T> instanceSupplier, boolean replaceExisting) {
-		Assert.notNull(type, "'type' must not be null");
-		Assert.notNull(instanceSupplier, "'instanceSupplier' must not be null");
-		synchronized (this.instanceSuppliers) {
-			boolean alreadyRegistered = this.instanceSuppliers.containsKey(type);
-			if (replaceExisting || !alreadyRegistered) {
-				Assert.state(!this.instances.containsKey(type), () -> type.getName() + " has already been created");
-				this.instanceSuppliers.put(type, instanceSupplier);
-			}
-		}
 	}
 
 	@Override
@@ -124,13 +121,16 @@ public class DefaultBootstrapContext implements ConfigurableBootstrapContext {
 		return instance;
 	}
 
-	/**
-	 * Method to be called when {@link BootstrapContext} is closed and the
-	 * {@link ApplicationContext} is prepared.
-	 * @param applicationContext the prepared context
-	 */
-	public void close(ConfigurableApplicationContext applicationContext) {
-		this.events.multicastEvent(new BootstrapContextClosedEvent(this, applicationContext));
+	private <T> void register(Class<T> type, InstanceSupplier<T> instanceSupplier, boolean replaceExisting) {
+		Assert.notNull(type, "'type' must not be null");
+		Assert.notNull(instanceSupplier, "'instanceSupplier' must not be null");
+		synchronized (this.instanceSuppliers) {
+			boolean alreadyRegistered = this.instanceSuppliers.containsKey(type);
+			if (replaceExisting || !alreadyRegistered) {
+				Assert.state(!this.instances.containsKey(type), () -> type.getName() + " has already been created");
+				this.instanceSuppliers.put(type, instanceSupplier);
+			}
+		}
 	}
 
 }

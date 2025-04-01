@@ -62,6 +62,11 @@ public final class LazyInitializationBeanFactoryPostProcessor implements BeanFac
 		}
 	}
 
+	@Override
+	public int getOrder() {
+		return Ordered.HIGHEST_PRECEDENCE;
+	}
+
 	private Collection<LazyInitializationExcludeFilter> getFilters(ConfigurableListableBeanFactory beanFactory) {
 		// Take care not to force the eager init of factory beans when getting filters
 		ArrayList<LazyInitializationExcludeFilter> filters = new ArrayList<>(
@@ -103,11 +108,6 @@ public final class LazyInitializationBeanFactoryPostProcessor implements BeanFac
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public int getOrder() {
-		return Ordered.HIGHEST_PRECEDENCE;
 	}
 
 	/**
