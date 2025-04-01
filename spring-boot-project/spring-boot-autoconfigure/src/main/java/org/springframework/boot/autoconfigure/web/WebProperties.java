@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
-import org.springframework.boot.convert.DurationUnit;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 import org.springframework.http.CacheControl;
 
 /**

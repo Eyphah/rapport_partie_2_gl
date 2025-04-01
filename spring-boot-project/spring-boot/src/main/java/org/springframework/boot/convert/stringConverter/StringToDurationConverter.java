@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.stringConverter;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Set;
 
+import org.springframework.boot.convert.durationConverter.DurationFormat;
+import org.springframework.boot.convert.durationConverter.DurationStyle;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.GenericConverter;
@@ -34,7 +37,7 @@ import org.springframework.util.ObjectUtils;
  * @see DurationFormat
  * @see DurationUnit
  */
-final class StringToDurationConverter implements GenericConverter {
+public final class StringToDurationConverter implements GenericConverter {
 
 	@Override
 	public Set<ConvertiblePair> getConvertibleTypes() {

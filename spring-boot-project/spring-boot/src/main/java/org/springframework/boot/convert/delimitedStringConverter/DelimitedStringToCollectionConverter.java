@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.delimitedStringConverter;
 
-import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Stream;
 
+import org.springframework.core.CollectionFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
@@ -27,22 +30,22 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * Converts a {@link Delimiter delimited} String to an Array.
+ * Converts a {@link Delimiter delimited} String to a Collection.
  *
  * @author Phillip Webb
  */
-final class DelimitedStringToArrayConverter implements ConditionalGenericConverter {
+public final class DelimitedStringToCollectionConverter implements ConditionalGenericConverter {
 
 	private final ConversionService conversionService;
 
-	DelimitedStringToArrayConverter(ConversionService conversionService) {
+	public DelimitedStringToCollectionConverter(ConversionService conversionService) {
 		Assert.notNull(conversionService, "'conversionService' must not be null");
 		this.conversionService = conversionService;
 	}
 
 	@Override
 	public Set<ConvertiblePair> getConvertibleTypes() {
-		return Collections.singleton(new ConvertiblePair(String.class, Object[].class));
+		return Collections.singleton(new ConvertiblePair(String.class, Collection.class));
 	}
 
 	@Override
@@ -63,13 +66,19 @@ final class DelimitedStringToArrayConverter implements ConditionalGenericConvert
 		Delimiter delimiter = targetType.getAnnotation(Delimiter.class);
 		String[] elements = getElements(source, (delimiter != null) ? delimiter.value() : ",");
 		TypeDescriptor elementDescriptor = targetType.getElementTypeDescriptor();
-		Object target = Array.newInstance(elementDescriptor.getType(), elements.length);
-		for (int i = 0; i < elements.length; i++) {
-			String sourceElement = elements[i];
-			Object targetElement = this.conversionService.convert(sourceElement.trim(), sourceType, elementDescriptor);
-			Array.set(target, i, targetElement);
+		Collection<Object> target = createCollection(targetType, elementDescriptor, elements.length);
+		Stream<Object> stream = Arrays.stream(elements).map(String::trim);
+		if (elementDescriptor != null) {
+			stream = stream.map((element) -> this.conversionService.convert(element, sourceType, elementDescriptor));
 		}
+		stream.forEach(target::add);
 		return target;
+	}
+
+	private Collection<Object> createCollection(TypeDescriptor targetType, TypeDescriptor elementDescriptor,
+			int length) {
+		return CollectionFactory.createCollection(targetType.getType(),
+				(elementDescriptor != null) ? elementDescriptor.getType() : null, length);
 	}
 
 	private String[] getElements(String source, String delimiter) {

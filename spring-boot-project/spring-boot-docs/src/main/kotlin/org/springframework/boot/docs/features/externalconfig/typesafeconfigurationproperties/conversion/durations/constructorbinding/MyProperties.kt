@@ -18,10 +18,10 @@ package org.springframework.boot.docs.features.externalconfig.typesafeconfigurat
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
-import org.springframework.boot.convert.DurationUnit
+import org.springframework.boot.convert.durationConverter.DurationUnit
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
 @ConfigurationProperties("my")
 class MyProperties(@param:DurationUnit(ChronoUnit.SECONDS) @param:DefaultValue("30s") val sessionTimeout: Duration,
-		@param:DefaultValue("1000ms") val readTimeout: Duration)
+				   @param:DefaultValue("1000ms") val readTimeout: Duration)

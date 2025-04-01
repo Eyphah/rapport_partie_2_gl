@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.convert.DurationUnit;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 import org.springframework.core.io.Resource;
 
 /**

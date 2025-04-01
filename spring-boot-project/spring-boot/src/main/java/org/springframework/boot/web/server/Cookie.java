@@ -19,7 +19,7 @@ package org.springframework.boot.web.server;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-import org.springframework.boot.convert.DurationUnit;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 
 /**
  * Cookie properties.

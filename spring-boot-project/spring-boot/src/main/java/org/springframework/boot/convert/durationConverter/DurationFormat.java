@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,31 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.durationConverter;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.Period;
+import java.time.Duration;
 
 /**
  * Annotation that can be used to indicate the format to use when converting a
- * {@link Period}.
+ * {@link Duration}.
  *
- * @author Eddú Meléndez
- * @author Edson Chávez
- * @since 2.3.0
+ * @author Phillip Webb
+ * @since 2.0.0
  */
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface PeriodFormat {
+public @interface DurationFormat {
 
 	/**
-	 * The {@link Period} format style.
-	 * @return the period format style.
+	 * The duration format style.
+	 * @return the duration format style.
 	 */
-	PeriodStyle value();
+	DurationStyle value();
 
 }

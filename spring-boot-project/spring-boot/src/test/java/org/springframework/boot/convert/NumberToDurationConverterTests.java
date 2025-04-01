@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import org.springframework.boot.convert.durationConverter.DurationUnit;
+import org.springframework.boot.convert.numberConverter.NumberToDurationConverter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;

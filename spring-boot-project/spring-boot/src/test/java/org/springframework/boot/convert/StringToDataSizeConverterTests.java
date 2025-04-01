@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import org.springframework.boot.convert.stringConverter.StringToDataSizeConverter;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;

@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import org.springframework.boot.convert.durationConverter.DurationStyle;
+import org.springframework.boot.convert.durationConverter.DurationToStringConverter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 

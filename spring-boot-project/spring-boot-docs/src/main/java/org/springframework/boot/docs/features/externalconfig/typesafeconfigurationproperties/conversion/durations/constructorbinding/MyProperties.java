@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.boot.convert.DurationUnit;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 
 @ConfigurationProperties("my")
 public class MyProperties {

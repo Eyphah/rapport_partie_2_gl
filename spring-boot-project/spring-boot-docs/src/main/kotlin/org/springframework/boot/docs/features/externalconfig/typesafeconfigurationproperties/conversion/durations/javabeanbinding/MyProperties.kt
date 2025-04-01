@@ -17,7 +17,7 @@
 package org.springframework.boot.docs.features.externalconfig.typesafeconfigurationproperties.conversion.durations.javabeanbinding
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.convert.DurationUnit
+import org.springframework.boot.convert.durationConverter.DurationUnit
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.Meter.Type;
 
-import org.springframework.boot.convert.DurationStyle;
+import org.springframework.boot.convert.durationConverter.DurationStyle;
 
 /**
  * A meter value that is used when configuring micrometer. Can be a String representation

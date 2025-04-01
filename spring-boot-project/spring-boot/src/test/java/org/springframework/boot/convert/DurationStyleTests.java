@@ -21,6 +21,8 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.boot.convert.durationConverter.DurationStyle;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 

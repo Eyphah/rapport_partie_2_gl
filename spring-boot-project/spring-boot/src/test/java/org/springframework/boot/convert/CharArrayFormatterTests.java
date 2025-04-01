@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import org.springframework.boot.convert.charConverter.CharArrayFormatter;
 import org.springframework.core.convert.ConversionService;
 
 import static org.assertj.core.api.Assertions.assertThat;

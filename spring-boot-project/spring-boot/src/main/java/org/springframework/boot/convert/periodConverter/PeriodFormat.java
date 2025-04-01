@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.periodConverter;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 
 /**
- * Annotation that can be used to change the default unit used when converting a
- * {@link Duration}.
+ * Annotation that can be used to indicate the format to use when converting a
+ * {@link Period}.
  *
- * @author Phillip Webb
- * @since 2.0.0
+ * @author Eddú Meléndez
+ * @author Edson Chávez
+ * @since 2.3.0
  */
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DurationUnit {
+public @interface PeriodFormat {
 
 	/**
-	 * The duration unit to use if one is not specified.
-	 * @return the duration unit
+	 * The {@link Period} format style.
+	 * @return the period format style.
 	 */
-	ChronoUnit value();
+	PeriodStyle value();
 
 }

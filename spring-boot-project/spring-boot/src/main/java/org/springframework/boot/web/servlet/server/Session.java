@@ -22,7 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.boot.convert.DurationUnit;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 
 /**
  * Session properties.

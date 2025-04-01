@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,47 +14,41 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.numberConverter;
 
+import java.time.Period;
 import java.util.Collections;
 import java.util.Set;
 
+import org.springframework.boot.convert.periodConverter.PeriodFormat;
+import org.springframework.boot.convert.periodConverter.PeriodUnit;
+import org.springframework.boot.convert.stringConverter.StringToPeriodConverter;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.GenericConverter;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.unit.DataSize;
-import org.springframework.util.unit.DataUnit;
 
 /**
- * {@link Converter} to convert from a {@link String} to a {@link DataSize}. Supports
- * {@link DataSize#parse(CharSequence)}.
+ * {@link Converter} to convert from a {@link Number} to a {@link Period}. Supports
+ * {@link Period#parse(CharSequence)} as well a more readable {@code 10m} form.
  *
- * @author Stephane Nicoll
- * @see DataSizeUnit
+ * @author Eddú Meléndez
+ * @author Edson Chávez
+ * @see PeriodFormat
+ * @see PeriodUnit
  */
-final class StringToDataSizeConverter implements GenericConverter {
+public final class NumberToPeriodConverter implements GenericConverter {
+
+	private final StringToPeriodConverter delegate = new StringToPeriodConverter();
 
 	@Override
 	public Set<ConvertiblePair> getConvertibleTypes() {
-		return Collections.singleton(new ConvertiblePair(String.class, DataSize.class));
+		return Collections.singleton(new ConvertiblePair(Number.class, Period.class));
 	}
 
 	@Override
 	public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-		if (ObjectUtils.isEmpty(source)) {
-			return null;
-		}
-		return convert(source.toString(), getDataUnit(targetType));
-	}
-
-	private DataUnit getDataUnit(TypeDescriptor targetType) {
-		DataSizeUnit annotation = targetType.getAnnotation(DataSizeUnit.class);
-		return (annotation != null) ? annotation.value() : null;
-	}
-
-	private DataSize convert(String source, DataUnit unit) {
-		return DataSize.parse(source, unit);
+		return this.delegate.convert((source != null) ? source.toString() : null, TypeDescriptor.valueOf(String.class),
+				targetType);
 	}
 
 }

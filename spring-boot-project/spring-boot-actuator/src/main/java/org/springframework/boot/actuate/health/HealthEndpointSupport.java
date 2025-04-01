@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.actuate.endpoint.ApiVersion;
 import org.springframework.boot.actuate.endpoint.SecurityContext;
 import org.springframework.boot.actuate.endpoint.web.WebServerNamespace;
-import org.springframework.boot.convert.DurationStyle;
+import org.springframework.boot.convert.durationConverter.DurationStyle;
 import org.springframework.core.log.LogMessage;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

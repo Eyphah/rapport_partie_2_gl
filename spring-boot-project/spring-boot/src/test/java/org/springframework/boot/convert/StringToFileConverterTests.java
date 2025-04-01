@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.provider.Arguments;
 
+import org.springframework.boot.convert.stringConverter.StringToFileConverter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.ClassPathResource;
 

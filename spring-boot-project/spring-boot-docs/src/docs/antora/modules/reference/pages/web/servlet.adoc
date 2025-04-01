@@ -60,7 +60,7 @@ Alternatively, add your own javadoc:org.springframework.context.annotation.Confi
 === Spring MVC Conversion Service
 
 Spring MVC uses a different javadoc:org.springframework.core.convert.ConversionService[] to the one used to convert values from your `application.properties` or `application.yaml` file.
-It means that javadoc:java.time.Period[], javadoc:java.time.Duration[] and javadoc:org.springframework.util.unit.DataSize[] converters are not available and that javadoc:org.springframework.boot.convert.DurationUnit[format=annotation] and javadoc:org.springframework.boot.convert.DataSizeUnit[format=annotation] annotations will be ignored.
+It means that javadoc:java.time.Period[], javadoc:java.time.Duration[] and javadoc:org.springframework.util.unit.DataSize[] converters are not available and that javadoc:org.springframework.boot.convert.durationConverter.DurationUnit[format=annotation] and javadoc:org.springframework.boot.convert.DataSizeUnit[format=annotation] annotations will be ignored.
 
 If you want to customize the javadoc:org.springframework.core.convert.ConversionService[] used by Spring MVC, you can provide a javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] bean with an `addFormatters` method.
 From this method you can register any converter that you like, or you can delegate to the static methods available on javadoc:org.springframework.boot.convert.ApplicationConversionService[].

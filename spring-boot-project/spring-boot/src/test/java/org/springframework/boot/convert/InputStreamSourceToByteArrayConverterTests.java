@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import org.springframework.boot.convert.inputStreamConverter.InputStreamSourceToByteArrayConverter;
 import org.springframework.boot.origin.Origin;
 import org.springframework.boot.origin.OriginProvider;
 import org.springframework.core.convert.ConversionFailedException;

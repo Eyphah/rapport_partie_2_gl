@@ -37,7 +37,7 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.MockConfigurationPropertySource;
 import org.springframework.boot.convert.ApplicationConversionService;
-import org.springframework.boot.convert.Delimiter;
+import org.springframework.boot.convert.delimitedStringConverter.Delimiter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.annotation.DateTimeFormat;

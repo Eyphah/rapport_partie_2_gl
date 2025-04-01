@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.convert.DurationUnit;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 import org.springframework.boot.web.servlet.DispatcherType;
 import org.springframework.session.web.http.SessionRepositoryFilter;
 

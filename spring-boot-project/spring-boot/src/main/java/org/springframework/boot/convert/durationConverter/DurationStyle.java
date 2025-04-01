@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.durationConverter;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

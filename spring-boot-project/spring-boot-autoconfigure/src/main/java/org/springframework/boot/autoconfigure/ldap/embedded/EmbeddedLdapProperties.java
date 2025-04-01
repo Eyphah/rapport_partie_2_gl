@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.convert.Delimiter;
+import org.springframework.boot.convert.delimitedStringConverter.Delimiter;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 

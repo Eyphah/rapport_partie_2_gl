@@ -20,6 +20,9 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 
+import org.springframework.boot.convert.durationConverter.DurationFormat;
+import org.springframework.boot.convert.durationConverter.DurationStyle;
+import org.springframework.boot.convert.durationConverter.DurationUnit;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.convert.TypeDescriptor;
 

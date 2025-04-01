@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.inputStreamConverter;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author Phillip Webb
  */
-class InputStreamSourceToByteArrayConverter implements Converter<InputStreamSource, byte[]> {
+public class InputStreamSourceToByteArrayConverter implements Converter<InputStreamSource, byte[]> {
 
 	@Override
 	public byte[] convert(InputStreamSource source) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.convert;
+package org.springframework.boot.convert.stringConverter;
 
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Set;
 
+import org.springframework.boot.convert.periodConverter.PeriodFormat;
+import org.springframework.boot.convert.periodConverter.PeriodStyle;
+import org.springframework.boot.convert.periodConverter.PeriodUnit;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.GenericConverter;
@@ -35,7 +38,7 @@ import org.springframework.util.ObjectUtils;
  * @see PeriodFormat
  * @see PeriodUnit
  */
-final class StringToPeriodConverter implements GenericConverter {
+public final class StringToPeriodConverter implements GenericConverter {
 
 	@Override
 	public Set<GenericConverter.ConvertiblePair> getConvertibleTypes() {
