@@ -67,6 +67,10 @@ abstract class AbstractClientHttpRequestFactoryBuilderTests<T extends ClientHttp
 
 	private static final Function<HttpMethod, HttpStatus> ALWAYS_FOUND = (method) -> HttpStatus.FOUND;
 
+	private static final int ONE_MINUTE = 60;
+	private static final int TWO_MINUTES = 2 * ONE_MINUTE;
+	private static final int TOMCAT_PORT = 0;
+
 	private final Class<T> requestFactoryType;
 
 	private final ClientHttpRequestFactoryBuilder<T> builder;
@@ -86,23 +90,23 @@ abstract class AbstractClientHttpRequestFactoryBuilderTests<T extends ClientHttp
 	@Test
 	void buildWhenHasConnectTimeout() {
 		ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
-			.withConnectTimeout(Duration.ofSeconds(60));
+			.withConnectTimeout(Duration.ofSeconds(ONE_MINUTE));
 		T requestFactory = this.builder.build(settings);
-		assertThat(connectTimeout(requestFactory)).isEqualTo(Duration.ofSeconds(60).toMillis());
+		assertThat(connectTimeout(requestFactory)).isEqualTo(Duration.ofSeconds(ONE_MINUTE).toMillis());
 	}
 
 	@Test
 	void buildWhenHadReadTimeout() {
 		ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
-			.withReadTimeout(Duration.ofSeconds(120));
+			.withReadTimeout(Duration.ofSeconds(TWO_MINUTES));
 		T requestFactory = this.builder.build(settings);
-		assertThat(readTimeout(requestFactory)).isEqualTo(Duration.ofSeconds(120).toMillis());
+		assertThat(readTimeout(requestFactory)).isEqualTo(Duration.ofSeconds(TWO_MINUTES).toMillis());
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "GET", "POST" })
 	void connectWithSslBundle(String httpMethod) throws Exception {
-		TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory(0);
+		TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory(TOMCAT_PORT);
 		webServerFactory.setSsl(ssl());
 		WebServer webServer = webServerFactory
 			.getWebServer((context) -> context.addServlet("test", TestServlet.class).addMapping("/"));
@@ -128,7 +132,7 @@ abstract class AbstractClientHttpRequestFactoryBuilderTests<T extends ClientHttp
 	@ParameterizedTest
 	@ValueSource(strings = { "GET", "POST" })
 	void connectWithSslBundleAndOptionsMismatch(String httpMethod) throws Exception {
-		TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory(0);
+		TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory(TOMCAT_PORT);
 		webServerFactory.setSsl(ssl("TLS_AES_128_GCM_SHA256"));
 		WebServer webServer = webServerFactory
 			.getWebServer((context) -> context.addServlet("test", TestServlet.class).addMapping("/"));
@@ -171,7 +175,7 @@ abstract class AbstractClientHttpRequestFactoryBuilderTests<T extends ClientHttp
 	protected final void testRedirect(ClientHttpRequestFactorySettings settings, HttpMethod httpMethod,
 			Function<HttpMethod, HttpStatus> expectedStatusForMethod) throws URISyntaxException, IOException {
 		HttpStatus expectedStatus = expectedStatusForMethod.apply(httpMethod);
-		TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory(0);
+		TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory(TOMCAT_PORT);
 		WebServer webServer = webServerFactory
 			.getWebServer((context) -> context.addServlet("test", TestServlet.class).addMapping("/"));
 		try {
