@@ -28,7 +28,7 @@ import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.Banner;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringApplication.AbandonedRunException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.SpringApplicationHook;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.boot.SpringBootConfiguration;

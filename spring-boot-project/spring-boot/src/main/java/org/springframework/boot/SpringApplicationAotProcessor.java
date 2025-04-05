@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import org.springframework.boot.SpringApplication.AbandonedRunException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.aot.ContextAotProcessor;

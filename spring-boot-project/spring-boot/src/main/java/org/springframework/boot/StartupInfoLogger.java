@@ -37,18 +37,18 @@ import org.springframework.util.StringUtils;
  * @author Dave Syer
  * @author Moritz Halbritter
  */
-class StartupInfoLogger {
+public class StartupInfoLogger {
 
 	private final Class<?> sourceClass;
 
 	private final Environment environment;
 
-	StartupInfoLogger(Class<?> sourceClass, Environment environment) {
+	public StartupInfoLogger(Class<?> sourceClass, Environment environment) {
 		this.sourceClass = sourceClass;
 		this.environment = environment;
 	}
 
-	void logStarting(Log applicationLog) {
+	public void logStarting(Log applicationLog) {
 		Assert.notNull(applicationLog, "'applicationLog' must not be null");
 		applicationLog.info(LogMessage.of(this::getStartingMessage));
 		applicationLog.debug(LogMessage.of(this::getRunningMessage));

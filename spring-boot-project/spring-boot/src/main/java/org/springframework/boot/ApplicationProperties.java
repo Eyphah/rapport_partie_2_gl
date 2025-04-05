@@ -29,7 +29,7 @@ import org.springframework.core.env.Environment;
  *
  * @author Moritz Halbritter
  */
-class ApplicationProperties {
+public class ApplicationProperties {
 
 	/**
 	 * Whether bean definition overriding, by registering a definition with the same name
@@ -96,7 +96,7 @@ class ApplicationProperties {
 		this.allowCircularReferences = allowCircularReferences;
 	}
 
-	Mode getBannerMode(Environment environment) {
+	public Mode getBannerMode(Environment environment) {
 		if (this.bannerMode != null) {
 			return this.bannerMode;
 		}

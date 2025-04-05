@@ -36,6 +36,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import org.springframework.boot.springapplicationutil.*;
+
+import org.springframework.boot.exceptions.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -198,7 +202,7 @@ public class SpringApplication {
 
 	private static final String SYSTEM_PROPERTY_JAVA_AWT_HEADLESS = "java.awt.headless";
 
-	private static final Log logger = LogFactory.getLog(SpringApplication.class);
+	public static final Log logger = LogFactory.getLog(SpringApplication.class);
 
 	static final SpringApplicationShutdownHook shutdownHook = new SpringApplicationShutdownHook();
 
@@ -212,7 +216,7 @@ public class SpringApplication {
 
 	private boolean addConversionService = true;
 
-	private Banner banner;
+	private SpringApplicationBannerUtil bannerUtil;
 
 	private ResourceLoader resourceLoader;
 
@@ -239,6 +243,10 @@ public class SpringApplication {
 	private ApplicationContextFactory applicationContextFactory = ApplicationContextFactory.DEFAULT;
 
 	private ApplicationStartup applicationStartup = ApplicationStartup.DEFAULT;
+
+	private SpringApplicationLog log;
+
+	private Banner banner;
 
 	final ApplicationProperties properties = new ApplicationProperties();
 
@@ -277,6 +285,8 @@ public class SpringApplication {
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
 		this.mainApplicationClass = deduceMainApplicationClass();
+		this.log = new SpringApplicationLog(this.mainApplicationClass);
+		this.bannerUtil = new SpringApplicationBannerUtil(this.banner, this.mainApplicationClass, this.resourceLoader, this.properties);
 	}
 
 	/**
@@ -298,7 +308,7 @@ public class SpringApplication {
 		try {
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
-			Banner printedBanner = printBanner(environment);
+			Banner printedBanner = this.bannerUtil.printBanner(environment);
 			context = createApplicationContext();
 			context.setApplicationStartup(this.applicationStartup);
 			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
@@ -306,7 +316,7 @@ public class SpringApplication {
 			afterRefresh(context, applicationArguments);
 			startup.started();
 			if (this.properties.isLogStartupInfo()) {
-				new StartupInfoLogger(this.mainApplicationClass, environment).logStarted(getApplicationLog(), startup);
+				new StartupInfoLogger(this.mainApplicationClass, environment).logStarted(SpringApplicationLog.getApplicationLog(), startup);
 			}
 			listeners.started(context, startup.timeTakenToStarted());
 			callRunners(context, applicationArguments);
@@ -398,7 +408,7 @@ public class SpringApplication {
 	}
 
 	/**
-	 * Strategy method used to create the {@link ApplicationContext}. By default this
+	 * Strategy method used to create the {@link ApplicationContext}. By default, this
 	 * method will respect any explicitly set application context class or factory before
 	 * falling back to a suitable default.
 	 * @return the application context (not yet refreshed)
@@ -447,63 +457,6 @@ public class SpringApplication {
 		}
 	}
 
-	/**
-	 * Called to log startup information, subclasses may override to add additional
-	 * logging.
-	 * @param context the application context
-	 * @since 3.4.0
-	 */
-	protected void logStartupInfo(ConfigurableApplicationContext context) {
-		boolean isRoot = context.getParent() == null;
-		if (isRoot) {
-			new StartupInfoLogger(this.mainApplicationClass, context.getEnvironment()).logStarting(getApplicationLog());
-		}
-	}
-
-	/**
-	 * Called to log startup information, subclasses may override to add additional
-	 * logging.
-	 * @param isRoot true if this application is the root of a context hierarchy
-	 * @deprecated since 3.4.0 for removal in 3.6.0 in favor of
-	 * {@link #logStartupInfo(ConfigurableApplicationContext)}
-	 */
-	@Deprecated(since = "3.4.0", forRemoval = true)
-	protected void logStartupInfo(boolean isRoot) {
-	}
-
-	/**
-	 * Called to log active profile information.
-	 * @param context the application context
-	 */
-	protected void logStartupProfileInfo(ConfigurableApplicationContext context) {
-		Log log = getApplicationLog();
-		if (log.isInfoEnabled()) {
-			List<String> activeProfiles = quoteProfiles(context.getEnvironment().getActiveProfiles());
-			if (ObjectUtils.isEmpty(activeProfiles)) {
-				List<String> defaultProfiles = quoteProfiles(context.getEnvironment().getDefaultProfiles());
-				String message = String.format("%s default %s: ", defaultProfiles.size(),
-						(defaultProfiles.size() <= 1) ? "profile" : "profiles");
-				log.info("No active profile set, falling back to " + message
-						+ StringUtils.collectionToDelimitedString(defaultProfiles, ", "));
-			}
-			else {
-				String message = (activeProfiles.size() == 1) ? "1 profile is active: "
-						: activeProfiles.size() + " profiles are active: ";
-				log.info("The following " + message + StringUtils.collectionToDelimitedString(activeProfiles, ", "));
-			}
-		}
-	}
-
-	/**
-	 * Returns the {@link Log} for the application. By default will be deduced.
-	 * @return the application log
-	 */
-	protected Log getApplicationLog() {
-		if (this.mainApplicationClass == null) {
-			return logger;
-		}
-		return LogFactory.getLog(this.mainApplicationClass);
-	}
 
 	/**
 	 * Load beans into the application context.
@@ -585,10 +538,6 @@ public class SpringApplication {
 		Comparator<Object> comparator = getOrderComparator(beanFactory)
 			.withSourceProvider(new FactoryAwareOrderSourceProvider(beanFactory, instancesToBeanNames));
 		instancesToBeanNames.keySet().stream().sorted(comparator).forEach((runner) -> callRunner(runner, args));
-	}
-
-	private List<String> quoteProfiles(String[] profiles) {
-		return Arrays.stream(profiles).map((profile) -> "\"" + profile + "\"").toList();
 	}
 
 	/**
@@ -713,9 +662,8 @@ public class SpringApplication {
 		listeners.contextPrepared(context);
 		bootstrapContext.close(context);
 		if (this.properties.isLogStartupInfo()) {
-			logStartupInfo(context.getParent() == null);
-			logStartupInfo(context);
-			logStartupProfileInfo(context);
+			this.log.logStartupInfo(context);
+			this.log.logStartupProfileInfo(context);
 		}
 		// Add boot specific singleton beans
 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
@@ -789,19 +737,6 @@ public class SpringApplication {
 
 	private <T> List<T> getSpringFactoriesInstances(Class<T> type) {
 		return getSpringFactoriesInstances(type, null);
-	}
-
-	private Banner printBanner(ConfigurableEnvironment environment) {
-		if (this.properties.getBannerMode(environment) == Banner.Mode.OFF) {
-			return null;
-		}
-		ResourceLoader resourceLoader = (this.resourceLoader != null) ? this.resourceLoader
-				: new DefaultResourceLoader(null);
-		SpringApplicationBannerPrinter bannerPrinter = new SpringApplicationBannerPrinter(resourceLoader, this.banner);
-		if (this.properties.getBannerMode(environment) == Mode.LOG) {
-			return bannerPrinter.print(environment, this.mainApplicationClass, logger);
-		}
-		return bannerPrinter.print(environment, this.mainApplicationClass, System.out);
 	}
 
 	private <T> List<T> getSpringFactoriesInstances(Class<T> type, ArgumentResolver argumentResolver) {
@@ -1354,12 +1289,12 @@ public class SpringApplication {
 	 * writing a test harness that needs to start an application with additional
 	 * configuration.
 	 * @param main the main method entry point that runs the {@link SpringApplication}
-	 * @return a {@link SpringApplication.Augmented} instance that can be used to add
+	 * @return a {@link Augmented} instance that can be used to add
 	 * configuration and run the application
 	 * @since 3.1.0
 	 * @see #withHook(SpringApplicationHook, Runnable)
 	 */
-	public static SpringApplication.Augmented from(ThrowingConsumer<String[]> main) {
+	public static Augmented from(ThrowingConsumer<String[]> main) {
 		Assert.notNull(main, "'main' must not be null");
 		return new Augmented(main, Collections.emptySet(), Collections.emptySet());
 	}
@@ -1475,276 +1410,4 @@ public class SpringApplication {
 		return ("main".equals(currentThread.getName()) || "restartedMain".equals(currentThread.getName()))
 				&& "main".equals(currentThread.getThreadGroup().getName());
 	}
-
-	/**
-	 * Used to configure and run an augmented {@link SpringApplication} where additional
-	 * configuration should be applied.
-	 *
-	 * @since 3.1.0
-	 */
-	public static class Augmented {
-
-		private final ThrowingConsumer<String[]> main;
-
-		private final Set<Class<?>> sources;
-
-		private final Set<String> additionalProfiles;
-
-		Augmented(ThrowingConsumer<String[]> main, Set<Class<?>> sources, Set<String> additionalProfiles) {
-			this.main = main;
-			this.sources = Set.copyOf(sources);
-			this.additionalProfiles = additionalProfiles;
-		}
-
-		/**
-		 * Return a new {@link SpringApplication.Augmented} instance with additional
-		 * sources that should be applied when the application runs.
-		 * @param sources the sources that should be applied
-		 * @return a new {@link SpringApplication.Augmented} instance
-		 */
-		public Augmented with(Class<?>... sources) {
-			LinkedHashSet<Class<?>> merged = new LinkedHashSet<>(this.sources);
-			merged.addAll(Arrays.asList(sources));
-			return new Augmented(this.main, merged, this.additionalProfiles);
-		}
-
-		/**
-		 * Return a new {@link SpringApplication.Augmented} instance with additional
-		 * profiles that should be applied when the application runs.
-		 * @param profiles the profiles that should be applied
-		 * @return a new {@link SpringApplication.Augmented} instance
-		 * @since 3.4.0
-		 */
-		public Augmented withAdditionalProfiles(String... profiles) {
-			Set<String> merged = new LinkedHashSet<>(this.additionalProfiles);
-			merged.addAll(Arrays.asList(profiles));
-			return new Augmented(this.main, this.sources, merged);
-		}
-
-		/**
-		 * Run the application using the given args.
-		 * @param args the main method args
-		 * @return the running {@link ApplicationContext}
-		 */
-		public SpringApplication.Running run(String... args) {
-			RunListener runListener = new RunListener();
-			SpringApplicationHook hook = new SingleUseSpringApplicationHook((springApplication) -> {
-				springApplication.addPrimarySources(this.sources);
-				springApplication.setAdditionalProfiles(this.additionalProfiles.toArray(String[]::new));
-				return runListener;
-			});
-			withHook(hook, () -> this.main.accept(args));
-			return runListener;
-		}
-
-		/**
-		 * {@link SpringApplicationRunListener} to capture {@link Running} application
-		 * details.
-		 */
-		private static final class RunListener implements SpringApplicationRunListener, Running {
-
-			private final List<ConfigurableApplicationContext> contexts = Collections
-				.synchronizedList(new ArrayList<>());
-
-			@Override
-			public void contextLoaded(ConfigurableApplicationContext context) {
-				this.contexts.add(context);
-			}
-
-			@Override
-			public ConfigurableApplicationContext getApplicationContext() {
-				List<ConfigurableApplicationContext> rootContexts = this.contexts.stream()
-					.filter((context) -> context.getParent() == null)
-					.toList();
-				Assert.state(!rootContexts.isEmpty(), "No root application context located");
-				Assert.state(rootContexts.size() == 1, "No unique root application context located");
-				return rootContexts.get(0);
-			}
-
-		}
-
-	}
-
-	/**
-	 * Provides access to details of a {@link SpringApplication} run using
-	 * {@link Augmented#run(String...)}.
-	 *
-	 * @since 3.1.0
-	 */
-	public interface Running {
-
-		/**
-		 * Return the root {@link ConfigurableApplicationContext} of the running
-		 * application.
-		 * @return the root application context
-		 */
-		ConfigurableApplicationContext getApplicationContext();
-
-	}
-
-	/**
-	 * {@link BeanFactoryPostProcessor} to re-order our property sources below any
-	 * {@code @PropertySource} items added by the {@link ConfigurationClassPostProcessor}.
-	 */
-	private static class PropertySourceOrderingBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Ordered {
-
-		private final ConfigurableApplicationContext context;
-
-		PropertySourceOrderingBeanFactoryPostProcessor(ConfigurableApplicationContext context) {
-			this.context = context;
-		}
-
-		@Override
-		public int getOrder() {
-			return Ordered.HIGHEST_PRECEDENCE;
-		}
-
-		@Override
-		public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-			DefaultPropertiesPropertySource.moveToEnd(this.context.getEnvironment());
-		}
-
-	}
-
-	/**
-	 * Exception that can be thrown to silently exit a running {@link SpringApplication}
-	 * without handling run failures.
-	 *
-	 * @since 3.0.0
-	 */
-	public static class AbandonedRunException extends RuntimeException {
-
-		private final ConfigurableApplicationContext applicationContext;
-
-		/**
-		 * Create a new {@link AbandonedRunException} instance.
-		 */
-		public AbandonedRunException() {
-			this(null);
-		}
-
-		/**
-		 * Create a new {@link AbandonedRunException} instance with the given application
-		 * context.
-		 * @param applicationContext the application context that was available when the
-		 * run was abandoned
-		 */
-		public AbandonedRunException(ConfigurableApplicationContext applicationContext) {
-			this.applicationContext = applicationContext;
-		}
-
-		/**
-		 * Return the application context that was available when the run was abandoned or
-		 * {@code null} if no context was available.
-		 * @return the application context
-		 */
-		public ConfigurableApplicationContext getApplicationContext() {
-			return this.applicationContext;
-		}
-
-	}
-
-	/**
-	 * {@link SpringApplicationHook} decorator that ensures the hook is only used once.
-	 */
-	private static final class SingleUseSpringApplicationHook implements SpringApplicationHook {
-
-		private final AtomicBoolean used = new AtomicBoolean();
-
-		private final SpringApplicationHook delegate;
-
-		private SingleUseSpringApplicationHook(SpringApplicationHook delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		public SpringApplicationRunListener getRunListener(SpringApplication springApplication) {
-			return this.used.compareAndSet(false, true) ? this.delegate.getRunListener(springApplication) : null;
-		}
-
-	}
-
-	/**
-	 * Starts a non-daemon thread to keep the JVM alive on {@link ContextRefreshedEvent}.
-	 * Stops the thread on {@link ContextClosedEvent}.
-	 */
-	private static final class KeepAlive implements ApplicationListener<ApplicationContextEvent> {
-
-		private final AtomicReference<Thread> thread = new AtomicReference<>();
-
-		@Override
-		public void onApplicationEvent(ApplicationContextEvent event) {
-			if (event instanceof ContextRefreshedEvent) {
-				startKeepAliveThread();
-			}
-			else if (event instanceof ContextClosedEvent) {
-				stopKeepAliveThread();
-			}
-		}
-
-		private void startKeepAliveThread() {
-			Thread thread = new Thread(() -> {
-				while (true) {
-					try {
-						Thread.sleep(Long.MAX_VALUE);
-					}
-					catch (InterruptedException ex) {
-						break;
-					}
-				}
-			});
-			if (this.thread.compareAndSet(null, thread)) {
-				thread.setDaemon(false);
-				thread.setName("keep-alive");
-				thread.start();
-			}
-		}
-
-		private void stopKeepAliveThread() {
-			Thread thread = this.thread.getAndSet(null);
-			if (thread == null) {
-				return;
-			}
-			thread.interrupt();
-		}
-
-	}
-
-	/**
-	 * {@link OrderSourceProvider} used to obtain factory method and target type order
-	 * sources. Based on internal {@link DefaultListableBeanFactory} code.
-	 */
-	private class FactoryAwareOrderSourceProvider implements OrderSourceProvider {
-
-		private final ConfigurableBeanFactory beanFactory;
-
-		private final Map<?, String> instancesToBeanNames;
-
-		FactoryAwareOrderSourceProvider(ConfigurableBeanFactory beanFactory, Map<?, String> instancesToBeanNames) {
-			this.beanFactory = beanFactory;
-			this.instancesToBeanNames = instancesToBeanNames;
-		}
-
-		@Override
-		public Object getOrderSource(Object obj) {
-			String beanName = this.instancesToBeanNames.get(obj);
-			return (beanName != null) ? getOrderSource(beanName, obj.getClass()) : null;
-		}
-
-		private Object getOrderSource(String beanName, Class<?> instanceType) {
-			try {
-				RootBeanDefinition beanDefinition = (RootBeanDefinition) this.beanFactory
-					.getMergedBeanDefinition(beanName);
-				Method factoryMethod = beanDefinition.getResolvedFactoryMethod();
-				Class<?> targetType = beanDefinition.getTargetType();
-				targetType = (targetType != instanceType) ? targetType : null;
-				return Stream.of(factoryMethod, targetType).filter(Objects::nonNull).toArray();
-			}
-			catch (NoSuchBeanDefinitionException ex) {
-				return null;
-			}
-		}
-
-	}
-
 }

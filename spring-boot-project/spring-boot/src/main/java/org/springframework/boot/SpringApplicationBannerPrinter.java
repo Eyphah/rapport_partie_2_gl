@@ -35,7 +35,7 @@ import org.springframework.core.io.ResourceLoader;
  *
  * @author Phillip Webb
  */
-class SpringApplicationBannerPrinter {
+public class SpringApplicationBannerPrinter {
 
 	static final String BANNER_LOCATION_PROPERTY = "spring.banner.location";
 
@@ -47,12 +47,12 @@ class SpringApplicationBannerPrinter {
 
 	private final Banner fallbackBanner;
 
-	SpringApplicationBannerPrinter(ResourceLoader resourceLoader, Banner fallbackBanner) {
+	public SpringApplicationBannerPrinter(ResourceLoader resourceLoader, Banner fallbackBanner) {
 		this.resourceLoader = resourceLoader;
 		this.fallbackBanner = fallbackBanner;
 	}
 
-	Banner print(Environment environment, Class<?> sourceClass, Log logger) {
+	public Banner print(Environment environment, Class<?> sourceClass, Log logger) {
 		Banner banner = getBanner(environment);
 		try {
 			logger.info(createStringFromBanner(banner, environment, sourceClass));

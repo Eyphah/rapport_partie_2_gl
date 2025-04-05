@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import org.springframework.boot.exceptions.*;
 
 import jakarta.annotation.PostConstruct;
 import org.assertj.core.api.Condition;
@@ -1392,12 +1393,12 @@ class SpringApplicationTests {
 
 			@Override
 			public void contextLoaded(ConfigurableApplicationContext context) {
-				throw new SpringApplication.AbandonedRunException(context);
+				throw new AbandonedRunException(context);
 			}
 
 		});
 		SpringApplicationHook hook = (springApplication) -> runListener;
-		assertThatExceptionOfType(SpringApplication.AbandonedRunException.class)
+		assertThatExceptionOfType(AbandonedRunException.class)
 			.isThrownBy(() -> SpringApplication.withHook(hook, () -> application.run()))
 			.satisfies((ex) -> assertThat(ex.getApplicationContext().isRunning()).isFalse());
 		then(runListener).should().starting(any());
