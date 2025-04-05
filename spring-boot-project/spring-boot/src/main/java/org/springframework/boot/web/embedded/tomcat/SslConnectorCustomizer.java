@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
  * @author Cyril Dangerville
  * @author Moritz Halbritter
  */
-class SslConnectorCustomizer {
+public class SslConnectorCustomizer {
 
 	private final Log logger;
 
@@ -51,20 +51,20 @@ class SslConnectorCustomizer {
 
 	private final Connector connector;
 
-	SslConnectorCustomizer(Log logger, Connector connector, ClientAuth clientAuth) {
+	public SslConnectorCustomizer(Log logger, Connector connector, ClientAuth clientAuth) {
 		this.logger = logger;
 		this.clientAuth = clientAuth;
 		this.connector = connector;
 	}
 
-	void update(String serverName, SslBundle updatedSslBundle) {
+	public void update(String serverName, SslBundle updatedSslBundle) {
 		AbstractHttp11Protocol<?> protocol = (AbstractHttp11Protocol<?>) this.connector.getProtocolHandler();
 		String host = (serverName != null) ? serverName : protocol.getDefaultSSLHostConfigName();
 		this.logger.debug("SSL Bundle for host " + host + " has been updated, reloading SSL configuration");
 		addSslHostConfig(protocol, host, updatedSslBundle);
 	}
 
-	void customize(SslBundle sslBundle, Map<String, SslBundle> serverNameSslBundles) {
+	public void customize(SslBundle sslBundle, Map<String, SslBundle> serverNameSslBundles) {
 		ProtocolHandler handler = this.connector.getProtocolHandler();
 		Assert.state(handler instanceof AbstractHttp11Protocol,
 				"To use SSL, the connector's protocol handler must be an AbstractHttp11Protocol subclass");

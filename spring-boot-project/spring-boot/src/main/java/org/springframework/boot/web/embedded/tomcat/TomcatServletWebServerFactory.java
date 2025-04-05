@@ -118,7 +118,6 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 
 	private static final Log logger = LogFactory.getLog(TomcatServletWebServerFactory.class);
 
-	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
 	private static final Set<Class<?>> NO_CLASSES = Collections.emptySet();
 
@@ -139,10 +138,6 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 
 	private Set<TomcatContextCustomizer> tomcatContextCustomizers = new LinkedHashSet<>();
 
-	private Set<TomcatConnectorCustomizer> tomcatConnectorCustomizers = new LinkedHashSet<>();
-
-	private Set<TomcatProtocolHandlerCustomizer<?>> tomcatProtocolHandlerCustomizers = new LinkedHashSet<>();
-
 	private final List<Connector> additionalTomcatConnectors = new ArrayList<>();
 
 	private ResourceLoader resourceLoader;
@@ -152,8 +147,6 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 	private Set<String> tldSkipPatterns = new LinkedHashSet<>(TldPatterns.DEFAULT_SKIP);
 
 	private final Set<String> tldScanPatterns = new LinkedHashSet<>(TldPatterns.DEFAULT_SCAN);
-
-	private Charset uriEncoding = DEFAULT_CHARSET;
 
 	private int backgroundProcessorDelay;
 
@@ -338,62 +331,6 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		}
 	}
 
-	// Needs to be protected so it can be used by subclasses
-	protected void customizeConnector(Connector connector) {
-		int port = Math.max(getPort(), 0);
-		connector.setPort(port);
-		if (StringUtils.hasText(getServerHeader())) {
-			connector.setProperty("server", getServerHeader());
-		}
-		if (connector.getProtocolHandler() instanceof AbstractProtocol<?> abstractProtocol) {
-			customizeProtocol(abstractProtocol);
-		}
-		invokeProtocolHandlerCustomizers(connector.getProtocolHandler());
-		if (getUriEncoding() != null) {
-			connector.setURIEncoding(getUriEncoding().name());
-		}
-		if (getHttp2() != null && getHttp2().isEnabled()) {
-			connector.addUpgradeProtocol(new Http2Protocol());
-		}
-		if (Ssl.isEnabled(getSsl())) {
-			customizeSsl(connector);
-		}
-		TomcatConnectorCustomizer compression = new CompressionConnectorCustomizer(getCompression());
-		compression.customize(connector);
-		for (TomcatConnectorCustomizer customizer : this.tomcatConnectorCustomizers) {
-			customizer.customize(connector);
-		}
-	}
-
-	private void customizeProtocol(AbstractProtocol<?> protocol) {
-		if (getAddress() != null) {
-			protocol.setAddress(getAddress());
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void invokeProtocolHandlerCustomizers(ProtocolHandler protocolHandler) {
-		LambdaSafe
-			.callbacks(TomcatProtocolHandlerCustomizer.class, this.tomcatProtocolHandlerCustomizers, protocolHandler)
-			.invoke((customizer) -> customizer.customize(protocolHandler));
-	}
-
-	private void customizeSsl(Connector connector) {
-		SslConnectorCustomizer customizer = new SslConnectorCustomizer(logger, connector, getSsl().getClientAuth());
-		customizer.customize(getSslBundle(), getServerNameSslBundles());
-		addBundleUpdateHandler(null, getSsl().getBundle(), customizer);
-		getSsl().getServerNameBundles()
-			.forEach((serverNameSslBundle) -> addBundleUpdateHandler(serverNameSslBundle.serverName(),
-					serverNameSslBundle.bundle(), customizer));
-	}
-
-	private void addBundleUpdateHandler(String serverName, String sslBundleName, SslConnectorCustomizer customizer) {
-		if (StringUtils.hasText(sslBundleName)) {
-			getSslBundles().addBundleUpdateHandler(sslBundleName,
-					(sslBundle) -> customizer.update(serverName, sslBundle));
-		}
-	}
-
 	/**
 	 * Configure the Tomcat {@link Context}.
 	 * @param context the Tomcat context
@@ -524,6 +461,11 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 	@Override
 	public void setBaseDirectory(File baseDirectory) {
 		this.baseDirectory = baseDirectory;
+	}
+
+	@Override
+	public void setBackgroundProcessorDelay(int delay) {
+		this.backgroundProcessorDelay = delay;
 	}
 
 	/**
@@ -752,23 +694,6 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		return this.additionalTomcatConnectors;
 	}
 
-	@Override
-	public void setUriEncoding(Charset uriEncoding) {
-		this.uriEncoding = uriEncoding;
-	}
-
-	/**
-	 * Returns the character encoding to use for URL decoding.
-	 * @return the URI encoding
-	 */
-	public Charset getUriEncoding() {
-		return this.uriEncoding;
-	}
-
-	@Override
-	public void setBackgroundProcessorDelay(int delay) {
-		this.backgroundProcessorDelay = delay;
-	}
 
 	/**
 	 * Set whether the factory should disable Tomcat's MBean registry prior to creating

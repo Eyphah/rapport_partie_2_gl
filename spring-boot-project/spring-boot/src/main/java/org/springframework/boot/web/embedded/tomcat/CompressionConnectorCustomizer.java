@@ -29,11 +29,11 @@ import org.springframework.util.StringUtils;
  *
  * @author Brian Clozel
  */
-class CompressionConnectorCustomizer implements TomcatConnectorCustomizer {
+public class CompressionConnectorCustomizer implements TomcatConnectorCustomizer {
 
 	private final Compression compression;
 
-	CompressionConnectorCustomizer(Compression compression) {
+	public CompressionConnectorCustomizer(Compression compression) {
 		this.compression = compression;
 	}
 

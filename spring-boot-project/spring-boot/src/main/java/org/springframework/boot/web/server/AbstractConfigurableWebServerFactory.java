@@ -19,6 +19,8 @@ package org.springframework.boot.web.server;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -26,11 +28,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.connector.Connector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.coyote.AbstractProtocol;
+import org.apache.coyote.ProtocolHandler;
+import org.apache.coyote.http2.Http2Protocol;
+
 import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundles;
+import org.springframework.boot.util.LambdaSafe;
+import org.springframework.boot.web.embedded.tomcat.CompressionConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.Ssl.ServerNameSslBundle;
 import org.springframework.util.Assert;
 import org.springframework.boot.exceptions.*;
+import org.springframework.util.StringUtils;
 
 /**
  * Abstract base class for {@link ConfigurableWebServerFactory} implementations.
@@ -47,7 +63,11 @@ import org.springframework.boot.exceptions.*;
  */
 public abstract class AbstractConfigurableWebServerFactory implements ConfigurableWebServerFactory {
 
+	private static final Log logger = LogFactory.getLog(AbstractConfigurableWebServerFactory.class);
+
 	private int port = 8080;
+
+	protected Set<TomcatConnectorCustomizer> tomcatConnectorCustomizers = new LinkedHashSet<>();
 
 	private InetAddress address;
 
@@ -65,10 +85,16 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 
 	private Shutdown shutdown = Shutdown.IMMEDIATE;
 
+	protected Charset uriEncoding = DEFAULT_CHARSET;
+
+	protected Set<TomcatProtocolHandlerCustomizer<?>> tomcatProtocolHandlerCustomizers = new LinkedHashSet<>();
+
+	protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
 	/**
 	 * Create a new {@link AbstractConfigurableWebServerFactory} instance.
 	 */
-	public AbstractConfigurableWebServerFactory() {
+	protected AbstractConfigurableWebServerFactory() {
 	}
 
 	/**
@@ -76,7 +102,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	 * specified port.
 	 * @param port the port number for the web server
 	 */
-	public AbstractConfigurableWebServerFactory(int port) {
+	protected AbstractConfigurableWebServerFactory(int port) {
 		this.port = port;
 	}
 
@@ -94,6 +120,24 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	}
 
 	/**
+	 * Set the character encoding to use for URL decoding. If not specified 'UTF-8' will
+	 * be used.
+	 * @param uriEncoding the uri encoding to set
+	 */
+
+	public void setUriEncoding(Charset uriEncoding) {
+		this.uriEncoding = uriEncoding;
+	}
+
+	/**
+	 * Returns the character encoding to use for URL decoding.
+	 * @return the URI encoding
+	 */
+	public Charset getUriEncoding() {
+		return this.uriEncoding;
+	}
+
+	/**
 	 * Return the address that the web server binds to.
 	 * @return the address
 	 */
@@ -104,6 +148,62 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	@Override
 	public void setAddress(InetAddress address) {
 		this.address = address;
+	}
+
+	// Needs to be protected so it can be used by subclasses
+	protected void customizeConnector(Connector connector) {
+		int port = Math.max(getPort(), 0);
+		connector.setPort(port);
+		if (StringUtils.hasText(getServerHeader())) {
+			connector.setProperty("server", getServerHeader());
+		}
+		if (connector.getProtocolHandler() instanceof AbstractProtocol<?> abstractProtocol) {
+			customizeProtocol(abstractProtocol);
+		}
+		invokeProtocolHandlerCustomizers(connector.getProtocolHandler());
+		if (getUriEncoding() != null) {
+			connector.setURIEncoding(getUriEncoding().name());
+		}
+		if (getHttp2() != null && getHttp2().isEnabled()) {
+			connector.addUpgradeProtocol(new Http2Protocol());
+		}
+		if (Ssl.isEnabled(getSsl())) {
+			customizeSsl(connector);
+		}
+		TomcatConnectorCustomizer compression = new CompressionConnectorCustomizer(getCompression());
+		compression.customize(connector);
+		for (TomcatConnectorCustomizer customizer : this.tomcatConnectorCustomizers) {
+			customizer.customize(connector);
+		}
+	}
+
+	private void customizeSsl(Connector connector) {
+		SslConnectorCustomizer customizer = new SslConnectorCustomizer(logger, connector, getSsl().getClientAuth());
+		customizer.customize(getSslBundle(), getServerNameSslBundles());
+		addBundleUpdateHandler(null, getSsl().getBundle(), customizer);
+		getSsl().getServerNameBundles()
+				.forEach((serverNameSslBundle) -> addBundleUpdateHandler(serverNameSslBundle.serverName(),
+						serverNameSslBundle.bundle(), customizer));
+	}
+
+	private void addBundleUpdateHandler(String serverName, String sslBundleName, SslConnectorCustomizer customizer) {
+		if (StringUtils.hasText(sslBundleName)) {
+			getSslBundles().addBundleUpdateHandler(sslBundleName,
+					(sslBundle) -> customizer.update(serverName, sslBundle));
+		}
+	}
+
+	private void customizeProtocol(AbstractProtocol<?> protocol) {
+		if (getAddress() != null) {
+			protocol.setAddress(getAddress());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void invokeProtocolHandlerCustomizers(ProtocolHandler protocolHandler) {
+		LambdaSafe
+				.callbacks(TomcatProtocolHandlerCustomizer.class, this.tomcatProtocolHandlerCustomizers, protocolHandler)
+				.invoke((customizer) -> customizer.customize(protocolHandler));
 	}
 
 	/**

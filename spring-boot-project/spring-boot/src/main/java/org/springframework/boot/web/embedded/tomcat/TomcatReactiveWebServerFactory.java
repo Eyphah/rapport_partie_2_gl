@@ -69,8 +69,6 @@ public class TomcatReactiveWebServerFactory extends AbstractReactiveWebServerFac
 
 	private static final Log logger = LogFactory.getLog(TomcatReactiveWebServerFactory.class);
 
-	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-
 	/**
 	 * The class name of default protocol used.
 	 */
@@ -86,15 +84,9 @@ public class TomcatReactiveWebServerFactory extends AbstractReactiveWebServerFac
 
 	private Set<TomcatContextCustomizer> tomcatContextCustomizers = new LinkedHashSet<>();
 
-	private Set<TomcatConnectorCustomizer> tomcatConnectorCustomizers = new LinkedHashSet<>();
-
-	private Set<TomcatProtocolHandlerCustomizer<?>> tomcatProtocolHandlerCustomizers = new LinkedHashSet<>();
-
 	private final List<Connector> additionalTomcatConnectors = new ArrayList<>();
 
 	private String protocol = DEFAULT_PROTOCOL;
-
-	private Charset uriEncoding = DEFAULT_CHARSET;
 
 	private int backgroundProcessorDelay;
 
@@ -195,61 +187,6 @@ public class TomcatReactiveWebServerFactory extends AbstractReactiveWebServerFac
 		this.contextLifecycleListeners.forEach(context::addLifecycleListener);
 		new DisableReferenceClearingContextCustomizer().customize(context);
 		this.tomcatContextCustomizers.forEach((customizer) -> customizer.customize(context));
-	}
-
-	protected void customizeConnector(Connector connector) {
-		int port = Math.max(getPort(), 0);
-		connector.setPort(port);
-		if (StringUtils.hasText(getServerHeader())) {
-			connector.setProperty("server", getServerHeader());
-		}
-		if (connector.getProtocolHandler() instanceof AbstractProtocol<?> abstractProtocol) {
-			customizeProtocol(abstractProtocol);
-		}
-		invokeProtocolHandlerCustomizers(connector.getProtocolHandler());
-		if (getUriEncoding() != null) {
-			connector.setURIEncoding(getUriEncoding().name());
-		}
-		if (getHttp2() != null && getHttp2().isEnabled()) {
-			connector.addUpgradeProtocol(new Http2Protocol());
-		}
-		if (Ssl.isEnabled(getSsl())) {
-			customizeSsl(connector);
-		}
-		TomcatConnectorCustomizer compression = new CompressionConnectorCustomizer(getCompression());
-		compression.customize(connector);
-		for (TomcatConnectorCustomizer customizer : this.tomcatConnectorCustomizers) {
-			customizer.customize(connector);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void invokeProtocolHandlerCustomizers(ProtocolHandler protocolHandler) {
-		LambdaSafe
-			.callbacks(TomcatProtocolHandlerCustomizer.class, this.tomcatProtocolHandlerCustomizers, protocolHandler)
-			.invoke((customizer) -> customizer.customize(protocolHandler));
-	}
-
-	private void customizeProtocol(AbstractProtocol<?> protocol) {
-		if (getAddress() != null) {
-			protocol.setAddress(getAddress());
-		}
-	}
-
-	private void customizeSsl(Connector connector) {
-		SslConnectorCustomizer customizer = new SslConnectorCustomizer(logger, connector, getSsl().getClientAuth());
-		customizer.customize(getSslBundle(), getServerNameSslBundles());
-		addBundleUpdateHandler(null, getSsl().getBundle(), customizer);
-		getSsl().getServerNameBundles()
-			.forEach((serverNameSslBundle) -> addBundleUpdateHandler(serverNameSslBundle.serverName(),
-					serverNameSslBundle.bundle(), customizer));
-	}
-
-	private void addBundleUpdateHandler(String serverName, String sslBundleName, SslConnectorCustomizer customizer) {
-		if (StringUtils.hasText(sslBundleName)) {
-			getSslBundles().addBundleUpdateHandler(sslBundleName,
-					(sslBundle) -> customizer.update(serverName, sslBundle));
-		}
 	}
 
 	@Override
@@ -395,23 +332,6 @@ public class TomcatReactiveWebServerFactory extends AbstractReactiveWebServerFac
 		return this.engineValves;
 	}
 
-	/**
-	 * Set the character encoding to use for URL decoding. If not specified 'UTF-8' will
-	 * be used.
-	 * @param uriEncoding the uri encoding to set
-	 */
-	@Override
-	public void setUriEncoding(Charset uriEncoding) {
-		this.uriEncoding = uriEncoding;
-	}
-
-	/**
-	 * Returns the character encoding to use for URL decoding.
-	 * @return the URI encoding
-	 */
-	public Charset getUriEncoding() {
-		return this.uriEncoding;
-	}
 
 	/**
 	 * Set {@link LifecycleListener}s that should be applied to the Tomcat
