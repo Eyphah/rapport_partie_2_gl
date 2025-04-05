@@ -24,9 +24,9 @@ import java.util.function.Function;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Base class for parsers wrapped or implemented in this package.
- * This class provides common methods to parse JSON data into various data structures,
- * such as Maps and Lists, and handles parsing errors through custom exceptions.
+ * Base class for parsers wrapped or implemented in this package. This class provides
+ * common methods to parse JSON data into various data structures, such as Maps and Lists,
+ * and handles parsing errors through custom exceptions.
  *
  * @author Anton Telechev
  * @author Phillip Webb
@@ -35,36 +35,38 @@ import org.springframework.util.ReflectionUtils;
 public abstract class AbstractJsonParser implements JsonParser {
 
 	/**
-	 * Parses given JSON string into a Map, using the provided parser method to process the data.
-	 * The JSON String is expected to represent a JSON object
-	 *
+	 * Parses given JSON string into a Map, using the provided parser method to process
+	 * the data. The JSON String is expected to represent a JSON object
 	 * @param json The JSON String to parse.
 	 * @param parser The method used to parse the JSON String into a Map.
 	 * @return A Map representing the JSON object that has been parsed.
-	 * @throws JsonParseException If the JSON string cannot be parsed as a Map.*/
+	 * @throws JsonParseException If the JSON string cannot be parsed as a Map.
+	 */
 	protected final Map<String, Object> parseMap(String json, Function<String, Map<String, Object>> parser) {
 		return trimParse(json, "{", parser);
 	}
 
 	/**
-	 * Parses the given JSON object into a List, using the provided parser method to process the data.
-	 * The JSON String is expected to represent a JSON array.
+	 * Parses the given JSON object into a List, using the provided parser method to
+	 * process the data. The JSON String is expected to represent a JSON array.
 	 * @param json The JSON string to parse.
 	 * @param parser The function used to parse the JSON string into a list.
 	 * @return A list representing the JSON data parsed.
 	 * @throws JsonParseException if the JSON string cannot be parsed.
-	 * */
+	 */
 	protected final List<Object> parseList(String json, Function<String, List<Object>> parser) {
 		return trimParse(json, "[", parser);
 	}
 
 	/**
-	 * Utility method that trims the spaces of given JSON String and if the JSON String starts with the given prefix, then it applies the given parser to it.
+	 * Utility method that trims the spaces of given JSON String and if the JSON String
+	 * starts with the given prefix, then it applies the given parser to it.
 	 * @param json The JSON string to trim.
 	 * @param prefix The string prefix.
 	 * @param parser The function used to parse the trimmed string.
 	 * @return The result of the parser method applied to the trimmed json string.
-	 * @throws  JsonParseException if the JSON string does not start with the given prefix.*/
+	 * @throws JsonParseException if the JSON string does not start with the given prefix.
+	 */
 	protected final <T> T trimParse(String json, String prefix, Function<String, T> parser) {
 		String trimmed = (json != null) ? json.trim() : "";
 		if (trimmed.startsWith(prefix)) {
@@ -80,7 +82,9 @@ public abstract class AbstractJsonParser implements JsonParser {
 	 * @return The result of parser.call() if successful
 	 * @throws JsonParseException if caught exception is from check type.
 	 * @throws RuntimeException if caught exception comes from runtime.
-	 * @throws IllegalStateException if caught exception is other than the 2 previous cases.*/
+	 * @throws IllegalStateException if caught exception is other than the 2 previous
+	 * cases.
+	 */
 	protected final <T> T tryParse(Callable<T> parser, Class<? extends Exception> check) {
 		try {
 			return parser.call();

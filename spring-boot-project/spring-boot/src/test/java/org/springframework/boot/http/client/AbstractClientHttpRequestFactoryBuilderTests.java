@@ -68,7 +68,9 @@ abstract class AbstractClientHttpRequestFactoryBuilderTests<T extends ClientHttp
 	private static final Function<HttpMethod, HttpStatus> ALWAYS_FOUND = (method) -> HttpStatus.FOUND;
 
 	private static final int ONE_MINUTE = 60;
+
 	private static final int TWO_MINUTES = 2 * ONE_MINUTE;
+
 	private static final int TOMCAT_PORT = 0;
 
 	private final Class<T> requestFactoryType;

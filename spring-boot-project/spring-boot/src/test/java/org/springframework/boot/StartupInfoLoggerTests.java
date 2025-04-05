@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.boot.SpringApplication.Startup;
+import org.springframework.boot.startupStrategyFactory.Startup;
 import org.springframework.mock.env.MockEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -149,12 +149,12 @@ class StartupInfoLoggerTests {
 		}
 
 		@Override
-		protected Long processUptime() {
+		public Long processUptime() {
 			return this.uptime;
 		}
 
 		@Override
-		protected String action() {
+		public String action() {
 			return this.action;
 		}
 

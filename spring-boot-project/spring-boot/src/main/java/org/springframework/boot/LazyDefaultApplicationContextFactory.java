@@ -23,9 +23,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 public class LazyDefaultApplicationContextFactory implements ApplicationContextFactory {
 
-
-	private static final Supplier<ApplicationContextFactory> delegateSupplier =
-			LazySupplier.of(DefaultApplicationContextFactory::new);
+	private static final Supplier<ApplicationContextFactory> delegateSupplier = LazySupplier
+		.of(DefaultApplicationContextFactory::new);
 
 	private static ApplicationContextFactory getDelegate() {
 		return delegateSupplier.get();
@@ -45,8 +44,11 @@ public class LazyDefaultApplicationContextFactory implements ApplicationContextF
 	public ConfigurableEnvironment createEnvironment(WebApplicationType webApplicationType) {
 		return getDelegate().createEnvironment(webApplicationType);
 	}
+
 	private static class LazySupplier implements Supplier<ApplicationContextFactory> {
+
 		private volatile ApplicationContextFactory instance;
+
 		private final Supplier<ApplicationContextFactory> supplier;
 
 		private LazySupplier(Supplier<ApplicationContextFactory> supplier) {
@@ -68,5 +70,7 @@ public class LazyDefaultApplicationContextFactory implements ApplicationContextF
 			}
 			return this.instance;
 		}
+
 	}
+
 }

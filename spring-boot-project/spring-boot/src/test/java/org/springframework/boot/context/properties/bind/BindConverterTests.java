@@ -274,17 +274,6 @@ class BindConverterTests {
 
 	}
 
-	static class ConventionTypeEditor extends PropertyEditorSupport {
-
-		@Override
-		public void setAsText(String text) {
-			ConventionType value = new ConventionType();
-			value.text = text;
-			setValue(value);
-		}
-
-	}
-
 	/**
 	 * {@link ConversionService} that always throws an {@link AssertionError}.
 	 */

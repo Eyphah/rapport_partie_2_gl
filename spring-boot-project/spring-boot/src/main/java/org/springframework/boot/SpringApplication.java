@@ -17,9 +17,7 @@
 package org.springframework.boot;
 
 import java.lang.StackWalker.StackFrame;
-import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +38,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.crac.management.CRaCMXBean;
 
 import org.springframework.aot.AotDetector;
 import org.springframework.beans.BeansException;
@@ -61,6 +58,7 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 import org.springframework.boot.convert.ApplicationConversionService;
+import org.springframework.boot.startupStrategyFactory.Startup;
 import org.springframework.boot.web.reactive.context.AnnotationConfigReactiveWebServerApplicationContext;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
@@ -588,7 +586,6 @@ public class SpringApplication {
 		instancesToBeanNames.keySet().stream().sorted(comparator).forEach((runner) -> callRunner(runner, args));
 	}
 
-
 	private List<String> quoteProfiles(String[] profiles) {
 		return Arrays.stream(profiles).map((profile) -> "\"" + profile + "\"").toList();
 	}
@@ -698,7 +695,7 @@ public class SpringApplication {
 	private Class<? extends ConfigurableEnvironment> deduceEnvironmentClass() {
 		WebApplicationType webApplicationType = this.properties.getWebApplicationType();
 		Class<? extends ConfigurableEnvironment> environmentType = this.applicationContextFactory
-				.getEnvironmentType(webApplicationType);
+			.getEnvironmentType(webApplicationType);
 		if (environmentType == null && this.applicationContextFactory != ApplicationContextFactory.DEFAULT) {
 			environmentType = ApplicationContextFactory.DEFAULT.getEnvironmentType(webApplicationType);
 		}
@@ -1415,14 +1412,14 @@ public class SpringApplication {
 
 	private Class<?> deduceMainApplicationClass() {
 		return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
-				.walk(this::findMainClass)
-				.orElse(null);
+			.walk(this::findMainClass)
+			.orElse(null);
 	}
 
 	private Optional<Class<?>> findMainClass(Stream<StackFrame> stack) {
 		return stack.filter((frame) -> Objects.equals(frame.getMethodName(), "main"))
-				.findFirst()
-				.map(StackWalker.StackFrame::getDeclaringClass);
+			.findFirst()
+			.map(StackWalker.StackFrame::getDeclaringClass);
 	}
 
 	private void handleExitCode(ConfigurableApplicationContext context, Throwable exception) {
@@ -1708,102 +1705,6 @@ public class SpringApplication {
 				return;
 			}
 			thread.interrupt();
-		}
-
-	}
-
-	/**
-	 * Strategy used to handle startup concerns.
-	 */
-	abstract static class Startup {
-
-		private Duration timeTakenToStarted;
-
-		protected abstract long startTime();
-
-		protected abstract Long processUptime();
-
-		protected abstract String action();
-
-		final Duration started() {
-			long now = System.currentTimeMillis();
-			this.timeTakenToStarted = Duration.ofMillis(now - startTime());
-			return this.timeTakenToStarted;
-		}
-
-		Duration timeTakenToStarted() {
-			return this.timeTakenToStarted;
-		}
-
-		private Duration ready() {
-			long now = System.currentTimeMillis();
-			return Duration.ofMillis(now - startTime());
-		}
-
-		static Startup create() {
-			ClassLoader classLoader = Startup.class.getClassLoader();
-			return (ClassUtils.isPresent("jdk.crac.management.CRaCMXBean", classLoader)
-					&& ClassUtils.isPresent("org.crac.management.CRaCMXBean", classLoader))
-							? new CoordinatedRestoreAtCheckpointStartup() : new StandardStartup();
-		}
-
-	}
-
-	/**
-	 * Standard {@link Startup} implementation.
-	 */
-	private static final class StandardStartup extends Startup {
-
-		private final Long startTime = System.currentTimeMillis();
-
-		@Override
-		protected long startTime() {
-			return this.startTime;
-		}
-
-		@Override
-		protected Long processUptime() {
-			try {
-				return ManagementFactory.getRuntimeMXBean().getUptime();
-			}
-			catch (Throwable ex) {
-				return null;
-			}
-		}
-
-		@Override
-		protected String action() {
-			return "Started";
-		}
-
-	}
-
-	/**
-	 * Coordinated-Restore-At-Checkpoint {@link Startup} implementation.
-	 */
-	private static final class CoordinatedRestoreAtCheckpointStartup extends Startup {
-
-		private final StandardStartup fallback = new StandardStartup();
-
-		@Override
-		protected Long processUptime() {
-			long uptime = CRaCMXBean.getCRaCMXBean().getUptimeSinceRestore();
-			return (uptime >= 0) ? uptime : this.fallback.processUptime();
-		}
-
-		@Override
-		protected String action() {
-			return (restoreTime() >= 0) ? "Restored" : this.fallback.action();
-		}
-
-		private long restoreTime() {
-			return CRaCMXBean.getCRaCMXBean().getRestoreTime();
-		}
-
-		@Override
-		protected long startTime() {
-			long restoreTime = restoreTime();
-			return (restoreTime >= 0) ? restoreTime : this.fallback.startTime();
 		}
 
 	}

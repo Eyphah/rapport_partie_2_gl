@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.logging.Log;
 
 import org.springframework.aot.AotDetector;
-import org.springframework.boot.SpringApplication.Startup;
+import org.springframework.boot.startupStrategyFactory.Startup;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;

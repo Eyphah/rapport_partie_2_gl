@@ -42,7 +42,8 @@ public class GsonJsonParser extends AbstractJsonParser {
 	/**
 	 * Method that parses a JSON String into a Map<String,Object>.
 	 * @param json The string to parse.
-	 * @return The parsed Map<String, Object>.*/
+	 * @return The parsed Map<String, Object>.
+	 */
 	@Override
 	public Map<String, Object> parseMap(String json) {
 		return tryParse(() -> parseMap(json, (trimmed) -> this.gson.fromJson(trimmed, MAP_TYPE.getType())),
@@ -52,7 +53,8 @@ public class GsonJsonParser extends AbstractJsonParser {
 	/**
 	 * Method that parses a JSON String into a List<Object>.
 	 * @param json The string to parse.
-	 * @return The parsed List<Object>.*/
+	 * @return The parsed List<Object>.
+	 */
 	@Override
 	public List<Object> parseList(String json) {
 		return tryParse(() -> parseList(json, (trimmed) -> this.gson.fromJson(trimmed, LIST_TYPE.getType())),

@@ -1702,11 +1702,6 @@ public class ServerProperties {
 			return this.allowEncodedSlash;
 		}
 
-		@Deprecated(forRemoval = true, since = "3.0.3")
-		public void setAllowEncodedSlash(boolean allowEncodedSlash) {
-			this.allowEncodedSlash = allowEncodedSlash;
-		}
-
 		public Boolean getDecodeSlash() {
 			return this.decodeSlash;
 		}
