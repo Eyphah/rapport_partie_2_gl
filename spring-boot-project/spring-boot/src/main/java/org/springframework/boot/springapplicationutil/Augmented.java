@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.runner.notification.RunListener;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationHook;
 import org.springframework.context.ApplicationContext;
@@ -84,9 +82,9 @@ public class Augmented {
 		SpringApplicationHook hook = new SingleUseSpringApplicationHook((springApplication) -> {
 			springApplication.addPrimarySources(this.sources);
 			springApplication.setAdditionalProfiles(this.additionalProfiles.toArray(String[]::new));
-			return (org.springframework.boot.SpringApplicationRunListener) runListener;
+			return runListener;
 		});
 		withHook(hook, () -> this.main.accept(args));
-		return (Running) runListener;
+		return runListener;
 	}
 }

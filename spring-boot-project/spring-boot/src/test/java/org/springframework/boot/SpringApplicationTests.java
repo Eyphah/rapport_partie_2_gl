@@ -147,6 +147,8 @@ import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 
+import org.springframework.boot.springapplicationutil.*;
+
 /**
  * Tests for {@link SpringApplication}.
  *
