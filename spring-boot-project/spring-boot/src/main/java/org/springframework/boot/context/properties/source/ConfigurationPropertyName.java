@@ -957,24 +957,42 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 
 		private ElementType updateType(ElementType existingType, char ch, int index) {
 			if (existingType.isIndexed()) {
-				if (existingType == ElementType.NUMERICALLY_INDEXED && !isNumeric(ch)) {
-					return ElementType.INDEXED;
-				}
-				return existingType;
+				return handleIndexedType(existingType,ch);
 			}
-			if (existingType == ElementType.EMPTY && isValidChar(ch, index)) {
-				return (index == 0) ? ElementType.UNIFORM : ElementType.NON_UNIFORM;
+			if (existingType == ElementType.EMPTY) {
+				return handleEmptyType(ch,index);
 			}
 			if (existingType == ElementType.UNIFORM && ch == '-') {
 				return ElementType.DASHED;
 			}
 			if (!isValidChar(ch, index)) {
-				if (existingType == ElementType.EMPTY && !isValidChar(Character.toLowerCase(ch), index)) {
-					return ElementType.EMPTY;
-				}
-				return ElementType.NON_UNIFORM;
+				return handleInvalidChar(existingType,ch,index);
 			}
 			return existingType;
+		}
+
+		private ElementType handleIndexedType(ElementType existingType, char ch){
+			if (existingType == ElementType.NUMERICALLY_INDEXED && !isNumeric(ch)) {
+				return ElementType.INDEXED;
+			}
+			return existingType;
+		}
+
+		private ElementType handleEmptyType(char ch,int index) {
+			if(isValidChar(ch,index)){
+				return (index==0) ? ElementType.EMPTY : ElementType.NON_UNIFORM;
+			}
+			if(!isValidChar(Character.toLowerCase(ch),index)){
+				return ElementType.EMPTY;
+			}
+			return ElementType.NON_UNIFORM;
+		}
+
+		private ElementType handleInvalidChar(ElementType existingType, char ch, int index) {
+			if (existingType == ElementType.EMPTY && !isValidChar(Character.toLowerCase(ch), index)) {
+				return ElementType.EMPTY;
+			}
+			return ElementType.NON_UNIFORM;
 		}
 
 		private void add(int start, int end, ElementType type, Function<CharSequence, CharSequence> valueProcessor) {
