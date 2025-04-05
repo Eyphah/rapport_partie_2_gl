@@ -15,6 +15,7 @@
  */
 
 package org.springframework.boot.ssl;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Interface that can be used to register an {@link SslBundle} for a given name.

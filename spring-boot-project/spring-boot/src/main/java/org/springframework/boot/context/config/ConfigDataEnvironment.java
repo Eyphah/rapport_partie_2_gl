@@ -30,7 +30,7 @@ import org.springframework.boot.BootstrapRegistry.Scope;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.DefaultPropertiesPropertySource;
 import org.springframework.boot.context.config.ConfigDataEnvironmentContributors.BinderOption;
-import org.springframework.boot.context.properties.bind.BindException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.bind.PlaceholdersResolver;
@@ -44,6 +44,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.log.LogMessage;
 import org.springframework.util.StringUtils;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Wrapper around a {@link ConfigurableEnvironment} that can be used to import and apply
@@ -253,9 +254,6 @@ class ConfigDataEnvironment {
 			return new ConfigDataActivationContext(this.environment, initialBinder);
 		}
 		catch (BindException ex) {
-			if (ex.getCause() instanceof InactiveConfigDataAccessException inactiveException) {
-				throw inactiveException;
-			}
 			throw ex;
 		}
 	}
@@ -281,9 +279,6 @@ class ConfigDataEnvironment {
 			return activationContext.withProfiles(profiles);
 		}
 		catch (BindException ex) {
-			if (ex.getCause() instanceof InactiveConfigDataAccessException inactiveException) {
-				throw inactiveException;
-			}
 			throw ex;
 		}
 	}

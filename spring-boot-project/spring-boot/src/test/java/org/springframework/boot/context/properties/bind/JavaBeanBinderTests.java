@@ -45,6 +45,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.entry;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Tests for {@link JavaBeanBinder}.

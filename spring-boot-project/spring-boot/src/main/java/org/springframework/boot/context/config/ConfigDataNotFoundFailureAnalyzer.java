@@ -19,7 +19,7 @@ package org.springframework.boot.context.config;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.boot.origin.Origin;
-
+import org.springframework.boot.exceptions.*;
 /**
  * An implementation of {@link AbstractFailureAnalyzer} to analyze failures caused by
  * {@link ConfigDataNotFoundException}.

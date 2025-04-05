@@ -32,7 +32,7 @@ import org.apache.catalina.core.StandardWrapper;
 import org.apache.catalina.session.ManagerBase;
 
 import org.springframework.boot.web.server.MimeMappings;
-import org.springframework.boot.web.server.WebServerException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.util.ClassUtils;
 
 /**

@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import org.springframework.boot.env.ConfigTreePropertySource;
 import org.springframework.boot.env.ConfigTreePropertySource.Option;
+import org.springframework.boot.exceptions.*;
 
 /**
  * {@link ConfigDataLoader} for config tree locations.

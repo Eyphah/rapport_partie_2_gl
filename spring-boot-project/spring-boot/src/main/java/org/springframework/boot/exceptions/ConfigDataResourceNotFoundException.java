@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.config;
+package org.springframework.boot.exceptions;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.springframework.boot.context.config.ConfigDataLocation;
+import org.springframework.boot.context.config.ConfigDataResource;
 import org.springframework.boot.origin.Origin;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -93,7 +95,7 @@ public class ConfigDataResourceNotFoundException extends ConfigDataNotFoundExcep
 	 * @param location the location to set
 	 * @return a new {@link ConfigDataResourceNotFoundException} instance
 	 */
-	ConfigDataResourceNotFoundException withLocation(ConfigDataLocation location) {
+	public ConfigDataResourceNotFoundException withLocation(ConfigDataLocation location) {
 		return new ConfigDataResourceNotFoundException(this.resource, location, getCause());
 	}
 

@@ -42,6 +42,7 @@ import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.log.LogMessage;
 import org.springframework.util.ObjectUtils;
+import org.springframework.boot.exceptions.*;
 
 /**
  * An immutable tree structure of {@link ConfigDataEnvironmentContributors} used to

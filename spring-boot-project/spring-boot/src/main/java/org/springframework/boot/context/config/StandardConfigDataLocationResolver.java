@@ -47,6 +47,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.boot.exceptions.*;
 
 /**
  * {@link ConfigDataLocationResolver} for standard locations.

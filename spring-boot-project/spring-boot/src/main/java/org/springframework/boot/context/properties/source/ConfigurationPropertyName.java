@@ -25,6 +25,7 @@ import java.util.function.Function;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.boot.exceptions.*;
 
 /**
  * A configuration property name composed of elements separated by dots. User created

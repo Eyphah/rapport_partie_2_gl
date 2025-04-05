@@ -30,6 +30,7 @@ import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundles;
 import org.springframework.boot.web.server.Ssl.ServerNameSslBundle;
 import org.springframework.util.Assert;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Abstract base class for {@link ConfigurableWebServerFactory} implementations.

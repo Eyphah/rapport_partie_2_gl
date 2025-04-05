@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.config;
+package org.springframework.boot.exceptions;
 
+import org.springframework.boot.context.config.ConfigData;
+import org.springframework.boot.context.config.ConfigDataEnvironmentContributor;
+import org.springframework.boot.context.config.ConfigDataResource;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
@@ -49,7 +52,7 @@ public class InactiveConfigDataAccessException extends ConfigDataException {
 	 * @param propertyName the name of the property
 	 * @param origin the origin or the property or {@code null}
 	 */
-	InactiveConfigDataAccessException(PropertySource<?> propertySource, ConfigDataResource location,
+	public InactiveConfigDataAccessException(PropertySource<?> propertySource, ConfigDataResource location,
 			String propertyName, Origin origin) {
 		super(getMessage(propertySource, location, propertyName, origin), null);
 		this.propertySource = propertySource;
@@ -116,7 +119,7 @@ public class InactiveConfigDataAccessException extends ConfigDataException {
 	 * @param contributor the contributor to check
 	 * @param name the name to check
 	 */
-	static void throwIfPropertyFound(ConfigDataEnvironmentContributor contributor, ConfigurationPropertyName name) {
+	public static void throwIfPropertyFound(ConfigDataEnvironmentContributor contributor, ConfigurationPropertyName name) {
 		ConfigurationPropertySource source = contributor.getConfigurationPropertySource();
 		ConfigurationProperty property = (source != null) ? source.getConfigurationProperty(name) : null;
 		if (property != null) {

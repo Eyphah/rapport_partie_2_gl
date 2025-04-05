@@ -37,7 +37,7 @@ import org.springframework.test.context.support.TestPropertySourceUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
+import org.springframework.boot.exceptions.*;
 /**
  * Tests for {@link CollectionBinder}.
  *

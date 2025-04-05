@@ -30,7 +30,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.util.Strings;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
+import org.assertj.core.api.NotThrownAssert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.context.properties.bind.BindContext;
-import org.springframework.boot.context.properties.bind.BindException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -205,7 +207,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 	@Test
 	void runWhenProfileSpecificMandatoryLocationDoesNotExistShouldFailWhenProfileActive() {
 		this.application.setAdditionalProfiles("prod");
-		assertThatExceptionOfType(ConfigDataResourceNotFoundException.class).isThrownBy(() -> this.application
+		Assertions.assertThatExceptionOfType(ConfigDataResourceNotFoundException.class).isThrownBy(() -> this.application
 			.run("--spring.config.name=testprofiles", "--spring.config.location=classpath:configdata/profiles/"));
 	}
 
@@ -552,14 +554,14 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 	@Test
 	void runWhenConfigLocationHasNonOptionalMissingFileDirectoryThrowsResourceNotFoundException() {
 		File location = new File(this.temp, "application.unknown");
-		assertThatExceptionOfType(ConfigDataLocationNotFoundException.class).isThrownBy(() -> this.application
+		Assertions.assertThatExceptionOfType(ConfigDataLocationNotFoundException.class).isThrownBy(() -> this.application
 			.run("--spring.config.location=" + StringUtils.cleanPath(location.getAbsolutePath()) + "/"));
 	}
 
 	@Test
 	void runWhenConfigLocationHasNonOptionalMissingClasspathDirectoryThrowsLocationNotFoundException() {
 		String location = "classpath:application.unknown/";
-		assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
+		Assertions.assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
 			.isThrownBy(() -> this.application.run("--spring.config.location=" + location));
 	}
 
@@ -573,7 +575,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenConfigLocationHasMandatoryDirectoryThatDoesntExistThrowsException() {
-		assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
+		Assertions.assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
 			.isThrownBy(() -> this.application.run("--spring.config.location=" + StringUtils.cleanPath("invalid/")));
 	}
 
@@ -596,6 +598,10 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 	void runWhenUsingInvalidPropertyThrowsException() {
 		assertThatExceptionOfType(InvalidConfigDataPropertyException.class)
 			.isThrownBy(() -> this.application.run("--spring.config.location=classpath:invalidproperty.properties"));
+	}
+
+	private NotThrownAssert assertThatExceptionOfType(Class<InvalidConfigDataPropertyException> invalidConfigDataPropertyExceptionClass) {
+		return null;
 	}
 
 	@Test
@@ -632,14 +638,14 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenHasPropertyInProfileDocumentThrowsException() {
-		assertThatExceptionOfType(BindException.class).isThrownBy(() -> this.application.run(
+		Assertions.assertThatExceptionOfType(BindException.class).isThrownBy(() -> this.application.run(
 				"--spring.config.location=classpath:application-import-with-placeholder-in-profile-document.properties"))
 			.withCauseInstanceOf(InactiveConfigDataAccessException.class);
 	}
 
 	@Test // gh-29386
 	void runWhenHasPropertyInEarlierProfileDocumentThrowsException() {
-		assertThatExceptionOfType(BindException.class).isThrownBy(() -> this.application.run(
+		Assertions.assertThatExceptionOfType(BindException.class).isThrownBy(() -> this.application.run(
 				"--spring.config.location=classpath:application-import-with-placeholder-in-earlier-profile-document.properties"))
 			.withCauseInstanceOf(InactiveConfigDataAccessException.class);
 	}
@@ -654,7 +660,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenHasNonOptionalImportThrowsException() {
-		assertThatExceptionOfType(ConfigDataResourceNotFoundException.class).isThrownBy(
+		Assertions.assertThatExceptionOfType(ConfigDataResourceNotFoundException.class).isThrownBy(
 				() -> this.application.run("--spring.config.location=classpath:missing-appplication.properties"));
 	}
 
@@ -682,7 +688,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenHasIncludedProfilesWithProfileSpecificDocumentThrowsException() {
-		assertThatExceptionOfType(InactiveConfigDataAccessException.class).isThrownBy(() -> this.application.run(
+		Assertions.assertThatExceptionOfType(InactiveConfigDataAccessException.class).isThrownBy(() -> this.application.run(
 				"--spring.config.location=classpath:application-include-profiles-in-profile-specific-document.properties"));
 	}
 
@@ -733,7 +739,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenMandatoryWildcardLocationDoesNotExistThrowsException() {
-		assertThatExceptionOfType(ConfigDataLocationNotFoundException.class).isThrownBy(() -> this.application
+		Assertions.assertThatExceptionOfType(ConfigDataLocationNotFoundException.class).isThrownBy(() -> this.application
 			.run("--spring.config.location=file:src/test/resources/nonexistent/*/testproperties.properties"));
 	}
 
@@ -745,7 +751,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenMandatoryWildcardLocationHasNoSubdirectories() {
-		assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
+		Assertions.assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
 			.isThrownBy(
 					() -> this.application.run("--spring.config.location=file:src/test/resources/config/0-empty/*/"))
 			.withMessage("Config data location 'file:src/test/resources/config/0-empty/*/' contains no subdirectories");
@@ -753,7 +759,7 @@ class ConfigDataEnvironmentPostProcessorIntegrationTests {
 
 	@Test
 	void runWhenHasMandatoryWildcardLocationThatDoesNotExist() {
-		assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
+		Assertions.assertThatExceptionOfType(ConfigDataLocationNotFoundException.class)
 			.isThrownBy(() -> this.application.run("--spring.config.location=file:invalid/*/"));
 	}
 

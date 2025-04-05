@@ -15,7 +15,7 @@
  */
 
 package org.springframework.boot.context.config;
-
+import org.springframework.boot.exceptions.*;
 import org.apache.commons.logging.Log;
 
 import org.springframework.core.log.LogMessage;

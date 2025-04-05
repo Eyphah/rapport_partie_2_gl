@@ -18,7 +18,7 @@ package org.springframework.boot.web.server;
 
 import java.security.KeyStore;
 
-import org.springframework.boot.ssl.NoSuchSslBundleException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundleKey;
 import org.springframework.boot.ssl.SslBundles;

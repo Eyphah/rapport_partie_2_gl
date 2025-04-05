@@ -593,7 +593,7 @@ class TomcatServletWebServerFactoryTests extends AbstractServletWebServerFactory
 		this.webServer.start();
 	}
 
-	@Override
+
 	protected void assertThatSslWithInvalidAliasCallFails(ThrowingCallable call) {
 		assertThatExceptionOfType(WebServerException.class).isThrownBy(call);
 	}

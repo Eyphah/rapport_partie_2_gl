@@ -15,6 +15,7 @@
  */
 
 package org.springframework.boot.context.config;
+import org.springframework.boot.exceptions.*;
 
 import org.junit.jupiter.api.Test;
 

@@ -28,6 +28,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Strategy interface used to resolve {@link ConfigDataLocation locations} into one or

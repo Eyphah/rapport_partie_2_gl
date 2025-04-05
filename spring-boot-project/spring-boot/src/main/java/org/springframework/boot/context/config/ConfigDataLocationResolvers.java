@@ -32,6 +32,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.io.support.SpringFactoriesLoader.ArgumentResolver;
+import org.springframework.boot.exceptions.*;
 
 /**
  * A collection of {@link ConfigDataLocationResolver} instances loaded via

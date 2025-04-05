@@ -34,7 +34,7 @@ import java.util.function.Function;
 import javax.security.auth.x500.X500Principal;
 
 import org.springframework.boot.info.SslInfo.CertificateValidityInfo.Status;
-import org.springframework.boot.ssl.NoSuchSslBundleException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundles;
 import org.springframework.util.ObjectUtils;
@@ -83,9 +83,9 @@ public class SslInfo {
 	 * @return information on all SSL bundles
 	 */
 	public List<BundleInfo> getBundles() {
-		return this.sslBundles.getBundleNames()
+		return (List<BundleInfo>) this.sslBundles.getBundleNames()
 			.stream()
-			.map((name) -> new BundleInfo(name, this.sslBundles.getBundle(name)))
+			.map((Function<? super String, ? extends BundleInfo>) (name) -> new BundleInfo(name, this.sslBundles.getBundle(name)))
 			.toList();
 	}
 

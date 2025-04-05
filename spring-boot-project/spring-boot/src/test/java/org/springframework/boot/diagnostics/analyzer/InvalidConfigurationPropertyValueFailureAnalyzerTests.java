@@ -21,7 +21,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.boot.origin.Origin;
 import org.springframework.boot.origin.OriginLookup;

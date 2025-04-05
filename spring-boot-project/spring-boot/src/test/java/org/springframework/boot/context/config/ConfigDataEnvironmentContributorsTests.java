@@ -34,7 +34,7 @@ import org.springframework.boot.DefaultBootstrapContext;
 import org.springframework.boot.cloud.CloudPlatform;
 import org.springframework.boot.context.config.ConfigDataEnvironmentContributor.Kind;
 import org.springframework.boot.context.config.ConfigDataEnvironmentContributors.BinderOption;
-import org.springframework.boot.context.properties.bind.BindException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.convert.ConversionService;

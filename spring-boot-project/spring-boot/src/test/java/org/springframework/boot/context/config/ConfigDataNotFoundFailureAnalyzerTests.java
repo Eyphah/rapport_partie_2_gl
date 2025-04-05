@@ -22,6 +22,7 @@ import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.boot.origin.Origin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Tests for {@link ConfigDataNotFoundFailureAnalyzer}.

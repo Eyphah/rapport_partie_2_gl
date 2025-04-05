@@ -24,6 +24,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.util.SystemPropertyUtils;
+import org.springframework.boot.exceptions.*;
 
 /**
  * {@link PlaceholdersResolver} backed by one or more

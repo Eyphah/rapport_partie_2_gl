@@ -25,6 +25,7 @@ import org.springframework.boot.context.config.LocationResourceLoader.ResourceTy
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
+import org.springframework.boot.exceptions.*;
 
 /**
  * {@link ConfigDataLocationResolver} for config tree locations.

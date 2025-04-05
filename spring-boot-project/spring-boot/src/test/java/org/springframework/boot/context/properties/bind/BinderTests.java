@@ -57,7 +57,7 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-
+import org.springframework.boot.exceptions.*;
 /**
  * Tests for {@link Binder}.
  *

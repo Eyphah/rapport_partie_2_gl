@@ -52,7 +52,7 @@ import org.springframework.util.CollectionUtils;
  * @author Phillip Webb
  * @author Madhura Bhave
  */
-class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironmentContributor> {
+public class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironmentContributor> {
 
 	private static final ConfigData.Options EMPTY_LOCATION_OPTIONS = ConfigData.Options
 		.of(ConfigData.Option.IGNORE_IMPORTS);
@@ -137,7 +137,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	 * Return the resource that contributed this instance.
 	 * @return the resource or {@code null}
 	 */
-	ConfigDataResource getResource() {
+	public ConfigDataResource getResource() {
 		return this.resource;
 	}
 
@@ -145,7 +145,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	 * Return if the contributor is from a profile specific import.
 	 * @return if the contributor is profile specific
 	 */
-	boolean isFromProfileSpecificImport() {
+	public boolean isFromProfileSpecificImport() {
 		return this.fromProfileSpecificImport;
 	}
 
@@ -153,7 +153,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	 * Return the property source for this contributor.
 	 * @return the property source or {@code null}
 	 */
-	PropertySource<?> getPropertySource() {
+	public PropertySource<?> getPropertySource() {
 		return this.propertySource;
 	}
 
@@ -161,7 +161,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	 * Return the configuration property source for this contributor.
 	 * @return the configuration property source or {@code null}
 	 */
-	ConfigurationPropertySource getConfigurationPropertySource() {
+	public ConfigurationPropertySource getConfigurationPropertySource() {
 		return this.configurationPropertySource;
 	}
 
@@ -170,7 +170,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	 * @param option the option to check
 	 * @return {@code true} if the option is present
 	 */
-	boolean hasConfigDataOption(ConfigData.Option option) {
+	public boolean hasConfigDataOption(ConfigData.Option option) {
 		return this.configDataOptions.contains(option);
 	}
 

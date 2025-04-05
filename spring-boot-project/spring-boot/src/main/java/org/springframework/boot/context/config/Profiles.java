@@ -56,7 +56,7 @@ public class Profiles implements Iterable<String> {
 	 */
 	public static final String INCLUDE_PROFILES_PROPERTY_NAME = "spring.profiles.include";
 
-	static final ConfigurationPropertyName INCLUDE_PROFILES = ConfigurationPropertyName
+	public static final ConfigurationPropertyName INCLUDE_PROFILES = ConfigurationPropertyName
 		.of(Profiles.INCLUDE_PROFILES_PROPERTY_NAME);
 
 	private static final Bindable<MultiValueMap<String, String>> STRING_STRINGS_MAP = Bindable

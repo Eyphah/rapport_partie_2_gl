@@ -52,6 +52,6 @@ public class SpringApplicationBannerUtil {
 		if (this.properties.getBannerMode(environment) == Mode.LOG) {
 			return bannerPrinter.print(environment, this.mainApplicationClass, logger);
 		}
-		return bannerPrinter.print(environment, this.mainApplicationClass, (Log)System.out);
+		return bannerPrinter.print(environment, this.mainApplicationClass, System.out);
 	}
 }

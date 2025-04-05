@@ -33,7 +33,7 @@ public class UnsupportedDataSourcePropertyException extends RuntimeException {
 		super(message);
 	}
 
-	static void throwIf(boolean test, Supplier<String> message) {
+	public static void throwIf(boolean test, Supplier<String> message) {
 		if (test) {
 			throw new UnsupportedDataSourcePropertyException(message.get());
 		}

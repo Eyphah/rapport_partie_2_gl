@@ -40,9 +40,8 @@ import org.mockito.InOrder;
 
 import org.springframework.boot.web.reactive.server.AbstractReactiveWebServerFactory;
 import org.springframework.boot.web.reactive.server.AbstractReactiveWebServerFactoryTests;
-import org.springframework.boot.web.server.PortInUseException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.web.server.Shutdown;
-import org.springframework.boot.web.server.WebServerException;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.web.reactive.function.client.WebClient;
 

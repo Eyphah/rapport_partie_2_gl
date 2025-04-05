@@ -37,7 +37,7 @@ public class BindException extends RuntimeException implements OriginProvider {
 
 	private final ConfigurationPropertyName name;
 
-	BindException(ConfigurationPropertyName name, Bindable<?> target, ConfigurationProperty property, Throwable cause) {
+	public BindException(ConfigurationPropertyName name, Bindable<?> target, ConfigurationProperty property, Throwable cause) {
 		super(buildMessage(name, target), cause);
 		this.name = name;
 		this.target = target;

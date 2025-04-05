@@ -21,6 +21,7 @@ import org.springframework.core.env.AbstractPropertyResolver;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySources;
 import org.springframework.core.env.PropertySourcesPropertyResolver;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Alternative {@link PropertySourcesPropertyResolver} implementation that recognizes

@@ -22,6 +22,7 @@ import org.springframework.boot.BootstrapContext;
 import org.springframework.boot.BootstrapRegistry;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.logging.DeferredLogFactory;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Strategy class that can be used to load {@link ConfigData} for a given

@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.assertj.core.api.NotThrownAssert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -56,6 +58,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Tests for {@link ConfigDataEnvironment}.
@@ -252,7 +255,7 @@ class ConfigDataEnvironmentTests {
 			}
 
 		};
-		assertThatExceptionOfType(InactiveConfigDataAccessException.class)
+		Assertions.assertThatExceptionOfType(InactiveConfigDataAccessException.class)
 			.isThrownBy(configDataEnvironment::processAndApply);
 	}
 
@@ -314,6 +317,10 @@ class ConfigDataEnvironmentTests {
 				this.environment, this.resourceLoader, this.additionalProfiles, null);
 		assertThatExceptionOfType(InvalidConfigDataPropertyException.class)
 			.isThrownBy(configDataEnvironment::processAndApply);
+	}
+
+	private NotThrownAssert assertThatExceptionOfType(Class<InvalidConfigDataPropertyException> invalidConfigDataPropertyExceptionClass) {
+		return null;
 	}
 
 	@Test

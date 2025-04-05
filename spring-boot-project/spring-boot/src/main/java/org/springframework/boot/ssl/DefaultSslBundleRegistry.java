@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.springframework.boot.exceptions.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

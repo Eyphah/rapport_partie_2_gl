@@ -15,6 +15,7 @@
  */
 
 package org.springframework.boot.web.server;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Simple interface that represents a fully configured web server (for example Tomcat,

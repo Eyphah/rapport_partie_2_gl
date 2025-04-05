@@ -25,6 +25,7 @@ import org.springframework.boot.origin.Origin;
 import org.springframework.boot.origin.OriginTrackedResource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
+import org.springframework.boot.exceptions.*;
 
 /**
  * {@link ConfigDataLoader} for {@link Resource} backed locations.

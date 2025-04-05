@@ -17,6 +17,7 @@
 package org.springframework.boot.rsocket.server;
 
 import java.net.InetSocketAddress;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Simple interface that represents a fully configured RSocket server. Allows the server

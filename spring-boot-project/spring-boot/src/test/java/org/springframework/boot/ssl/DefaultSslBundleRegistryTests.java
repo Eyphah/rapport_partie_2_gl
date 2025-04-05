@@ -32,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.mockito.Mockito.mock;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Tests for {@link DefaultSslBundleRegistry}.

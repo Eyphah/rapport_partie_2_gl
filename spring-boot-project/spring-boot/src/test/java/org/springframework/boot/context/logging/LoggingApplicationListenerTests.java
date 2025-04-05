@@ -49,7 +49,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.context.event.ApplicationFailedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
-import org.springframework.boot.context.properties.bind.BindException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 import org.springframework.boot.logging.AbstractLoggingSystem;
 import org.springframework.boot.logging.LogFile;

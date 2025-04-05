@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import reactor.core.publisher.Mono;
 
 import org.springframework.boot.rsocket.server.RSocketServer;
-import org.springframework.boot.rsocket.server.RSocketServerException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.util.Assert;
 
 /**

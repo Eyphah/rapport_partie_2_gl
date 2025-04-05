@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.config;
+package org.springframework.boot.exceptions;
 
+import org.springframework.boot.context.config.ConfigDataLocation;
 import org.springframework.boot.origin.Origin;
 import org.springframework.util.Assert;
 
@@ -62,6 +63,7 @@ public class ConfigDataLocationNotFoundException extends ConfigDataNotFoundExcep
 
 	/**
 	 * Return the location that could not be found.
+	 *
 	 * @return the location
 	 */
 	public ConfigDataLocation getLocation() {

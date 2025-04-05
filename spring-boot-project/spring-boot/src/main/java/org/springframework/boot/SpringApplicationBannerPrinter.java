@@ -63,7 +63,7 @@ public class SpringApplicationBannerPrinter {
 		return new PrintedBanner(banner, sourceClass);
 	}
 
-	Banner print(Environment environment, Class<?> sourceClass, PrintStream out) {
+	public Banner print(Environment environment, Class<?> sourceClass, PrintStream out) {
 		Banner banner = getBanner(environment);
 		banner.printBanner(environment, sourceClass, out);
 		return new PrintedBanner(banner, sourceClass);

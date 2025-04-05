@@ -46,6 +46,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Convenience class for building a {@link DataSource}. Provides a limited subset of the

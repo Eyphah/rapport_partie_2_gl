@@ -25,6 +25,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.boot.exceptions.*;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.CharacterIndex;

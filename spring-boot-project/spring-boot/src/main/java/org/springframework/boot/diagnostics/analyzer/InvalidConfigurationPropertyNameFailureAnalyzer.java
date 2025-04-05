@@ -19,7 +19,7 @@ package org.springframework.boot.diagnostics.analyzer;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyNameException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.config;
+package org.springframework.boot.exceptions;
+
+import org.springframework.boot.context.config.ConfigDataLocation;
 
 /**
  * Exception throw if a {@link ConfigDataLocation} is not supported.
@@ -31,7 +33,7 @@ public class UnsupportedConfigDataLocationException extends ConfigDataException 
 	 * Create a new {@link UnsupportedConfigDataLocationException} instance.
 	 * @param location the unsupported location
 	 */
-	UnsupportedConfigDataLocationException(ConfigDataLocation location) {
+	public UnsupportedConfigDataLocationException(ConfigDataLocation location) {
 		super("Unsupported config data location '" + location + "'", null);
 		this.location = location;
 	}

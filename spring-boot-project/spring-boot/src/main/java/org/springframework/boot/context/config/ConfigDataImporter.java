@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 
 import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.log.LogMessage;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Imports {@link ConfigData} by {@link ConfigDataLocationResolver resolving} and

@@ -19,6 +19,7 @@ package org.springframework.boot.ssl;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.springframework.boot.exceptions.*;
 
 /**
  * A managed set of {@link SslBundle} instances that can be retrieved by name.

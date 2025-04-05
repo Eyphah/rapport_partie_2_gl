@@ -41,6 +41,7 @@ import org.springframework.core.test.io.support.MockSpringFactoriesLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Tests for {@link ConfigDataLocationResolvers}.
