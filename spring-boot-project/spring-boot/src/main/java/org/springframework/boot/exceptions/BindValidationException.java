@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.properties.bind.validation;
+package org.springframework.boot.exceptions;
 
+import org.springframework.boot.context.properties.bind.validation.ValidationBindHandler;
+import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.util.Assert;
 
 /**
@@ -31,7 +33,7 @@ public class BindValidationException extends RuntimeException {
 
 	private final ValidationErrors validationErrors;
 
-	BindValidationException(ValidationErrors validationErrors) {
+	public BindValidationException(ValidationErrors validationErrors) {
 		super(getMessage(validationErrors));
 		Assert.notNull(validationErrors, "'validationErrors' must not be null");
 		this.validationErrors = validationErrors;

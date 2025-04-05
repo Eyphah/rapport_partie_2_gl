@@ -19,6 +19,8 @@ package org.springframework.boot.json;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.exceptions.JsonParseException;
+
 /**
  * Parser that can read JSON formatted strings into {@link Map}s or {@link List}s.
  *

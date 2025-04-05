@@ -18,6 +18,7 @@ package org.springframework.boot.context.properties;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
+import org.springframework.boot.exceptions.ConfigurationPropertiesBindException;
 
 /**
  * Helper class to programmatically bind configuration properties that use constructor

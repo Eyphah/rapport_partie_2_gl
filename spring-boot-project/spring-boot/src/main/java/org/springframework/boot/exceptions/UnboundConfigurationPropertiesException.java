@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.properties.bind;
+package org.springframework.boot.exceptions;
 
 import java.util.Collections;
 import java.util.Set;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.jdbc;
-
-import java.util.function.Supplier;
+package org.springframework.boot.exceptions;
 
 /**
- * {@link RuntimeException} thrown from {@link DataSourceBuilder} when an unsupported
- * property is used.
+ * {@link IllegalArgumentException} thrown when source JSON is invalid.
  *
+ * @author Anton Telechev
  * @author Phillip Webb
- * @since 2.5.0
+ * @since 2.0.1
  */
-public class UnsupportedDataSourcePropertyException extends RuntimeException {
+public class JsonParseException extends IllegalArgumentException {
 
-	UnsupportedDataSourcePropertyException(String message) {
-		super(message);
+	public JsonParseException() {
+		this(null);
 	}
 
-	static void throwIf(boolean test, Supplier<String> message) {
-		if (test) {
-			throw new UnsupportedDataSourcePropertyException(message.get());
-		}
+	public JsonParseException(Throwable cause) {
+		super("Cannot parse JSON", cause);
 	}
 
 }

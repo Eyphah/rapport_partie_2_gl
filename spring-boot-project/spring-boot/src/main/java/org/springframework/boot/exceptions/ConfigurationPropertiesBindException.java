@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.properties;
+package org.springframework.boot.exceptions;
 
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBean;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -31,7 +33,7 @@ public class ConfigurationPropertiesBindException extends BeanCreationException 
 
 	private final ConfigurationPropertiesBean bean;
 
-	ConfigurationPropertiesBindException(ConfigurationPropertiesBean bean, Exception cause) {
+	public ConfigurationPropertiesBindException(ConfigurationPropertiesBean bean, Exception cause) {
 		super(bean.getName(), getMessage(bean), cause);
 		this.bean = bean;
 	}

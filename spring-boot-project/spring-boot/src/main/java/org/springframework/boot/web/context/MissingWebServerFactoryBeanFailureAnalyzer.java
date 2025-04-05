@@ -21,7 +21,9 @@ import java.util.Locale;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.boot.diagnostics.FailureAnalyzer;
+import org.springframework.boot.exceptions.MissingWebServerFactoryBeanException;
 import org.springframework.core.annotation.Order;
+import org.springframework.boot.exceptions.*;
 
 /**
  * A {@link FailureAnalyzer} that performs analysis of failures caused by a

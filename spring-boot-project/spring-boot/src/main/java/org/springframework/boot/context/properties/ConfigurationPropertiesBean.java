@@ -96,7 +96,7 @@ public final class ConfigurationPropertiesBean {
 	 * Return the bean type.
 	 * @return the bean type
 	 */
-	Class<?> getType() {
+	public Class<?> getType() {
 		return this.bindTarget.getType().resolve();
 	}
 

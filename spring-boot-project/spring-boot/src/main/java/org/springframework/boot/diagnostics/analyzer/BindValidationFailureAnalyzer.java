@@ -18,8 +18,7 @@ package org.springframework.boot.diagnostics.analyzer;
 
 import java.util.List;
 
-import org.springframework.boot.context.properties.bind.BindException;
-import org.springframework.boot.context.properties.bind.validation.BindValidationException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.boot.origin.Origin;

@@ -23,6 +23,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.stereotype.Component;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.boot.exceptions.*;
 
 /**
  * Tests for {@link ConfigurationPropertiesBindException}.

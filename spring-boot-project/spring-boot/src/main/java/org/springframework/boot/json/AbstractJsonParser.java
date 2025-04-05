@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
+import org.springframework.boot.exceptions.JsonParseException;
 import org.springframework.util.ReflectionUtils;
 
 /**

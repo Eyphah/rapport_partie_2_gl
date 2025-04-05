@@ -18,7 +18,7 @@ package org.springframework.boot.diagnostics.analyzer;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.boot.AotInitializerNotFoundException;
+import org.springframework.boot.exceptions.AotInitializerNotFoundException;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 
 import static org.assertj.core.api.Assertions.assertThat;

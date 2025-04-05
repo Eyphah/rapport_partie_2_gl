@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.web.server;
+package org.springframework.boot.exceptions;
 
 import java.net.BindException;
 import java.util.Locale;

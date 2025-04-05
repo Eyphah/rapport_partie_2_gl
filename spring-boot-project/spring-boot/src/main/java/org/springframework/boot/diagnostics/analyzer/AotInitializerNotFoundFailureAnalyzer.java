@@ -16,7 +16,7 @@
 
 package org.springframework.boot.diagnostics.analyzer;
 
-import org.springframework.boot.AotInitializerNotFoundException;
+import org.springframework.boot.exceptions.AotInitializerNotFoundException;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 

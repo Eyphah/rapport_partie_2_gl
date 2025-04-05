@@ -32,9 +32,8 @@ import org.eclipse.jetty.server.handler.StatisticsHandler;
 
 import org.springframework.boot.web.server.GracefulShutdownCallback;
 import org.springframework.boot.web.server.GracefulShutdownResult;
-import org.springframework.boot.web.server.PortInUseException;
 import org.springframework.boot.web.server.WebServer;
-import org.springframework.boot.web.server.WebServerException;
+import org.springframework.boot.exceptions.*;
 import org.springframework.boot.web.server.WebServerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

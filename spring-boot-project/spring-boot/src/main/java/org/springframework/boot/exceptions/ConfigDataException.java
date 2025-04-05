@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.rsocket.server;
+package org.springframework.boot.exceptions;
 
 /**
- * Exceptions thrown by an RSocket server.
+ * Abstract base class for configuration data exceptions.
  *
- * @author Brian Clozel
- * @since 2.2.0
+ * @author Phillip Webb
+ * @author Madhura Bhave
+ * @since 2.4.0
  */
-public class RSocketServerException extends RuntimeException {
+public abstract class ConfigDataException extends RuntimeException {
 
-	public RSocketServerException(String message, Throwable cause) {
+	/**
+	 * Create a new {@link ConfigDataException} instance.
+	 * @param message the exception message
+	 * @param cause the exception cause
+	 */
+	protected ConfigDataException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

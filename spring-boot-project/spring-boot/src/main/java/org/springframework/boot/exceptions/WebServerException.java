@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.config;
+package org.springframework.boot.exceptions;
 
 /**
- * Abstract base class for configuration data exceptions.
+ * Exceptions thrown by a web server.
  *
  * @author Phillip Webb
- * @author Madhura Bhave
- * @since 2.4.0
+ * @since 2.0.0
  */
-public abstract class ConfigDataException extends RuntimeException {
+@SuppressWarnings("serial")
+public class WebServerException extends RuntimeException {
 
-	/**
-	 * Create a new {@link ConfigDataException} instance.
-	 * @param message the exception message
-	 * @param cause the exception cause
-	 */
-	protected ConfigDataException(String message, Throwable cause) {
+	public WebServerException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

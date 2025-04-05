@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.properties.source;
+package org.springframework.boot.exceptions;
 
 import org.springframework.util.Assert;
 

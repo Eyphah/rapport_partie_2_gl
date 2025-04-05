@@ -31,6 +31,7 @@ import org.springframework.boot.context.properties.bind.DataObjectPropertyName;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName.Form;
+import org.springframework.boot.exceptions.BindValidationException;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.AbstractBindingResult;
